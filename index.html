@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>폐기물처리시설 검사업무 AI 지원 플랫폼</title>
+<meta name="theme-color" content="#2F5D74">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="폐기물처리시설 검사업무 AI 지원 플랫폼 — 시설별 검사 법령·기준 검색, 검사시기 산정, 사전 모의점검">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="검사지원">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+
+<style>
+  :root{
+    --paper:#F2F1ED;--card:#FFFFFF;--ink:#1F231C;--ink2:#54594C;--ink3:#848A79;
+    --line:#DCDCD2;--line2:#EDEDE6;
+    --ember:#8F4517;--ember-soft:#F6E9E0;--amber:#7A5A0C;--amber-soft:#F4EDD9;
+    --accent:#2F5D74;--accent-soft:#DFE9EF;--accent-dk:#264B5D;--accent-ln:#B3C9D4;
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR","Segoe UI",sans-serif;
+    --serif:Georgia,"Times New Roman","AppleMyungjo","Batang",serif;
+  }
+  html[data-tone="b"]{--accent:#2F5D74;--accent-soft:#DFE9EF;--accent-dk:#264B5D;--accent-ln:#B3C9D4}
+  html[data-tone="a"]{--accent:#4A6A2E;--accent-soft:#E8EEDF;--accent-dk:#3D5926;--accent-ln:#C6D5B4}
+  html[data-tone="c"]{--accent:#5A5081;--accent-soft:#E8E5F0;--accent-dk:#4A4169;--accent-ln:#C4BDD8}
+  html[data-tone="d"]{--accent:#5B4636;--accent-soft:#EDE7E0;--accent-dk:#4A382B;--accent-ln:#CFC2B5}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:0 20px 80px}
+
+  header{border-bottom:1px solid var(--line);background:var(--paper);position:sticky;top:0;z-index:30}
+  .head-in{max-width:940px;margin:0 auto;padding:14px 20px 0}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  h1{font-family:var(--serif);font-size:21px;font-weight:400;margin:0;letter-spacing:-.2px}
+  .facpick{display:flex;align-items:center;gap:8px}
+  .facpick label{font-size:12px;color:var(--ink3);white-space:nowrap}
+  #fac{border:1px solid var(--accent);border-radius:6px;padding:7px 11px;font:inherit;font-size:14px;
+    font-weight:600;background:var(--accent-soft);color:var(--accent-dk);min-width:200px}
+  #fac:focus{outline:2px solid var(--accent);outline-offset:1px}
+  nav{display:flex;gap:1px;margin-top:12px;overflow-x:auto;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  nav button{appearance:none;background:none;border:0;border-bottom:2px solid transparent;
+    padding:8px 14px;font:inherit;font-size:13.5px;color:var(--ink2);cursor:pointer;white-space:nowrap}
+  nav button:hover{color:var(--ink)}
+  nav button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:3px}
+  nav button[data-tone="b"]{border-bottom-color:#BFD1DB}
+  nav button[data-tone="a"]{border-bottom-color:#CBD8BE}
+  nav button[data-tone="c"]{border-bottom-color:#CFC9DF}
+  nav button[data-tone="d"]{border-bottom-color:#D6CCC1}
+  nav button[data-tone="b"][aria-current="true"]{border-bottom-color:#2F5D74;color:#2F5D74;font-weight:600}
+  nav button[data-tone="a"][aria-current="true"]{border-bottom-color:#4A6A2E;color:#4A6A2E;font-weight:600}
+  nav button[data-tone="c"][aria-current="true"]{border-bottom-color:#5A5081;color:#5A5081;font-weight:600}
+  nav button[data-tone="d"][aria-current="true"]{border-bottom-color:#5B4636;color:#5B4636;font-weight:600}
+
+  .note{border-radius:6px;padding:12px 15px;font-size:13px;line-height:1.65;margin:18px 0 0}
+  .note.info{background:var(--accent-soft);border:1px solid var(--accent-ln);color:var(--accent-dk)}
+  .note.warn{background:var(--amber-soft);border:1px solid #E4D9B4;color:var(--amber)}
+  .note.alert{background:var(--ember-soft);border:1px solid #E6CDBB;color:var(--ember)}
+  .note b{font-weight:600}
+
+  section.pane{display:none} section.pane.on{display:block}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:20px 22px;margin-top:18px}
+  .card h2{font-size:17px;margin:0 0 4px;font-weight:600;letter-spacing:-.2px}
+  .card h3{font-size:14.5px;margin:20px 0 6px;font-weight:600;color:var(--accent)}
+  .card h3:first-of-type{margin-top:12px}
+  .card p{margin:0 0 11px}
+  .card p.lede{color:var(--ink3);font-size:13.5px;margin-bottom:16px}
+  .src{display:inline-block;font-family:var(--mono);font-size:11px;background:var(--line2);color:var(--ink2);
+    border-radius:4px;padding:2px 7px;margin-left:5px;vertical-align:1px}
+  .keyfact{background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;
+    padding:13px 16px;margin:14px 0;font-size:14.5px}
+  .keyfact b{font-weight:700}
+
+  table{width:100%;border-collapse:collapse;margin:10px 0 14px;font-size:13.5px}
+  td{padding:10px;border-bottom:1px solid var(--line2);vertical-align:top;line-height:1.6}
+  tr:last-child td{border-bottom:0}
+  td.k{font-weight:600;white-space:nowrap;width:132px}
+
+  .calc{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+  label.f{display:block;font-size:12.5px;color:var(--ink2);margin-bottom:5px;font-weight:600}
+  input.f,select.f{width:100%;border:1px solid var(--line);border-radius:6px;padding:9px 11px;
+    font:inherit;font-size:14.5px;background:#FCFCFA;color:var(--ink)}
+  input.f:focus,select.f:focus{outline:2px solid var(--accent);outline-offset:-1px}
+  .btn{appearance:none;border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:6px;
+    padding:10px 22px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap}
+  .btn:hover{background:var(--accent-dk)}
+  .btn[disabled]{opacity:.5;cursor:default}
+  .btn.ghost{background:var(--card);color:var(--ink2);border-color:var(--line)}
+  .btn.ghost:hover{background:var(--line2)}
+  .btn.sm{padding:6px 13px;font-size:13px;font-weight:500}
+  .btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .chk{display:flex;align-items:center;gap:7px;font-size:13.5px;color:var(--ink2);margin-top:12px}
+  .result{margin-top:16px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .result .band{background:var(--accent);color:#fff;padding:12px 16px;font-size:14px;font-weight:600}
+  .result .band.warn{background:var(--ember)}
+  .result .rows{padding:4px 16px 12px}
+  .rrow{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line2);font-size:14px;align-items:baseline}
+  .rrow:last-child{border-bottom:0}
+  .rrow .lb{width:118px;flex-shrink:0;color:var(--ink3);font-size:13px}
+  .rrow .vl{font-weight:600}
+  .rrow .vl small{font-weight:400;color:var(--ink3);font-size:12.5px;margin-left:6px}
+
+  .qrow{display:flex;gap:8px;margin-top:4px}
+  #q{flex:1;min-width:0;border:1px solid var(--line);border-radius:6px;padding:11px 13px;
+    font:inherit;font-size:15px;background:#FCFCFA;color:var(--ink)}
+  #q:focus{outline:2px solid var(--accent);outline-offset:-1px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+  .chip{appearance:none;border:1px dashed var(--line);background:none;border-radius:999px;padding:4px 11px;
+    font:inherit;font-size:12.5px;color:var(--ink2);cursor:pointer}
+  .chip:hover{border-style:solid;border-color:var(--accent);color:var(--accent)}
+  .tag{font-size:11.5px;padding:2px 8px;border-radius:4px;background:var(--line2);color:var(--ink2)}
+  .tag.chk2{background:var(--ember-soft);color:var(--ember)}
+  .tag.dt{font-family:var(--mono);background:var(--accent-soft);color:var(--accent)}
+  .tag.kind{background:var(--accent-soft);color:var(--accent-dk)}
+  .cpy{appearance:none;border:0;background:none;color:var(--ink3);cursor:pointer;font:inherit;font-size:12.5px;margin-left:auto}
+  .cpy:hover{color:var(--accent);text-decoration:underline}
+  .empty{text-align:center;padding:36px 20px;color:var(--ink3);font-size:14px}
+  .empty b{display:block;color:var(--ink2);font-size:15px;margin-bottom:5px;font-weight:600}
+
+  details.faq{border:1px solid var(--line);border-radius:7px;background:var(--card);margin-bottom:9px;overflow:hidden}
+  details.faq summary{cursor:pointer;padding:13px 16px;font-size:14.5px;font-weight:600;list-style:none}
+  details.faq summary::-webkit-details-marker{display:none}
+  details.faq summary::before{content:"▸";color:var(--accent);margin-right:9px;display:inline-block;transition:transform .15s}
+  details.faq[open] summary::before{transform:rotate(90deg)}
+  details.faq .ans{padding:0 16px 15px;font-size:14px;color:var(--ink2);line-height:1.75}
+  details.faq .ans p{margin:0 0 10px} details.faq .ans p:last-child{margin:0}
+
+  .grp{margin-top:18px}
+  .grp .gh{font-size:12px;font-family:var(--mono);letter-spacing:.06em;color:var(--ink3);padding:0 0 7px 2px;text-transform:uppercase}
+  .ck{background:var(--card);border:1px solid var(--line);border-radius:7px;padding:13px 15px;margin-bottom:8px;
+    display:grid;grid-template-columns:1fr 190px 96px;gap:12px;align-items:center}
+  .ck .nm{font-size:14px;font-weight:600;line-height:1.5}
+  .ck .nm small{display:block;font-weight:400;color:var(--ink3);font-size:12px;margin-top:2px}
+  .ck .inp input,.ck .inp select{width:100%;border:1px solid var(--line);border-radius:5px;padding:7px 9px;
+    font:inherit;font-size:13.5px;background:#FCFCFA;color:var(--ink)}
+  .ck .inp input:focus,.ck .inp select:focus{outline:2px solid var(--accent);outline-offset:-1px}
+  .ck .inp .std{font-size:11.5px;color:var(--ink3);margin-top:4px;font-family:var(--mono)}
+  .ck .inp .std.unset{color:var(--ember)}
+  .vd{text-align:center;font-size:12px;font-weight:600;border-radius:5px;padding:6px 4px;background:var(--line2);color:var(--ink3)}
+  .vd.pass{background:#E8EEDF;color:#4A6A2E}
+  .vd.fail{background:var(--ember-soft);color:var(--ember)}
+  .vd.check{background:var(--amber-soft);color:var(--amber)}
+  .ck.editing{border-color:var(--accent);background:#FBFCFA}
+  .edrow{display:grid;grid-template-columns:76px 1fr 1fr;gap:6px;margin-top:6px}
+  .edrow select,.edrow input{border:1px solid var(--line);border-radius:5px;padding:5px 7px;font:inherit;font-size:12.5px;background:#fff}
+  .scards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+  .sc{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;text-align:center}
+  .sc .n{font-size:26px;font-weight:700;font-family:var(--mono);line-height:1.2}
+  .sc .l{font-size:12px;color:var(--ink3);margin-top:2px}
+  .sc.pass .n{color:#4A6A2E} .sc.fail .n{color:var(--ember)} .sc.check .n{color:var(--amber)}
+  .verdict{margin-top:14px;border-radius:8px;padding:15px 18px;font-size:14.5px;line-height:1.7}
+  .verdict.ok{background:#E8EEDF;border:1px solid #C6D5B4;color:#3D5926}
+  .verdict.no{background:var(--ember-soft);border:1px solid #E6CDBB;color:var(--ember)}
+  .verdict b{font-weight:700}
+
+  /* 종합의견 */
+  .op{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:0 8px 8px 0;padding:16px 18px;margin-top:12px}
+  .op h4{margin:0 0 8px;font-size:13.5px;font-weight:700;color:var(--accent-dk)}
+  .op ul{margin:0;padding-left:18px} .op li{margin-bottom:6px;font-size:14px}
+  .op.prio1{border-left-color:var(--ember)} .op.prio1 h4{color:var(--ember)}
+  .op.prio2{border-left-color:var(--amber)} .op.prio2 h4{color:var(--amber)}
+  .aibox{margin-top:16px;background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:0 8px 8px 0;padding:16px 18px}
+  .aibox h4{margin:0 0 9px;font-size:12px;font-family:var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--accent)}
+  .aibox .bd{font-size:14.5px;line-height:1.78;white-space:pre-wrap}
+  .aibox .ft{margin-top:12px;padding-top:10px;border-top:1px solid var(--line2);font-size:12.5px;color:var(--ink3)}
+  .aibox.bad{border-left-color:var(--ember);background:var(--ember-soft)}
+  .spin{display:inline-block;width:11px;height:11px;border:2px solid var(--accent-soft);border-top-color:var(--accent);
+    border-radius:50%;animation:sp .7s linear infinite;vertical-align:-1px;margin-right:7px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion:reduce){.spin{animation-duration:2s}}
+
+  footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--ink3);line-height:1.8}
+  .prt{position:fixed;right:18px;bottom:18px;z-index:40}
+  @media print{ header,nav,.prt,.chips,.qrow{display:none} section.pane{display:block!important} body{background:#fff;font-size:11pt} .card,.op{break-inside:avoid} }
+  @media(max-width:700px){ .ck{grid-template-columns:1fr;gap:8px} .scards{grid-template-columns:repeat(2,1fr)} }
+  @media(max-width:640px){ .calc{grid-template-columns:1fr} .rrow{flex-direction:column;gap:2px} .rrow .lb{width:auto} td.k{width:auto} #fac{min-width:0;width:100%} .facpick{width:100%} }
+  .facts{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:18px}
+  .fx{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+  .fx .l{font-size:10.5px;font-family:var(--mono);letter-spacing:.05em;color:var(--ink3);text-transform:uppercase}
+  .fx .v{font-size:16px;font-weight:700;margin-top:3px;line-height:1.35}
+  .fx .v em{font-style:normal;color:var(--accent)}
+  .fx .s{font-size:11.5px;color:var(--ink3);margin-top:2px;line-height:1.5}
+  .oneline{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:0 8px 8px 0;padding:12px 15px;margin-top:9px;font-size:13.5px;line-height:1.6}
+  .oneline b{font-weight:700}
+  @media(max-width:760px){.facts{grid-template-columns:repeat(2,1fr)}}
+  /* 배포판 상단 바 */
+  .topbar{background:#F4EDD9;border-bottom:1px solid #E4D9B4;font-size:12.5px;color:#7A5A0C}
+  .topbar-in{max-width:940px;margin:0 auto;padding:9px 20px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+  .topbar b{font-weight:700}
+  .topbar .ver{margin-left:auto;font-family:var(--mono);font-size:11px;color:#8C7433;white-space:nowrap}
+  .topbar button{appearance:none;border:0;background:none;font:inherit;font-size:12px;
+    color:#7A5A0C;text-decoration:underline;cursor:pointer;padding:0}
+  .topdrop{display:none;background:#FBF7EA;border-bottom:1px solid #E4D9B4}
+  .topdrop.on{display:block}
+  .topdrop-in{max-width:940px;margin:0 auto;padding:13px 20px 15px;font-size:12.5px;color:#6B5210;line-height:1.75}
+  .topdrop-in ul{margin:6px 0 0;padding-left:18px} .topdrop-in li{margin-bottom:5px}
+  .topdrop-in h5{margin:12px 0 4px;font-size:12px;font-weight:700}
+</style>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <span>⚠ <b>이 도구는 AI를 활용해 제작했습니다.</b> 법령 원문을 반드시 함께 확인하십시오.</span>
+    <button id="tbMore">유의사항 자세히 ▾</button>
+    <span class="ver">v260821-061440</span>
+  </div>
+</div>
+<div class="topdrop" id="tbDrop">
+  <div class="topdrop-in">
+    <ul>
+      <li><b>수치 판정기준은 비어 있습니다.</b> 검사방법 규정 별표는 첨부파일 형태로 제공되어 수록하지 못했습니다. 사전 모의점검의 “기준값 편집”에서 원문을 확인해 직접 입력하셔야 판정됩니다.</li>
+      <li><b>사전 모의점검 항목은 법정 검사항목이 아닙니다.</b> 검사 전 준비 상태를 스스로 확인하기 위한 점검표이며, 모두 적합이 나와도 실제 검사 결과와 다를 수 있습니다.</li>
+      <li><b>“원문확인 필요” 표시가 붙은 내용</b>은 요약이거나 확인이 끝나지 않은 사항입니다. 그대로 인용하지 마십시오.</li>
+      <li>법령은 수시로 개정됩니다. 수록 내용과 국가법령정보센터(law.go.kr) 원문이 다를 경우 <b>원문이 우선</b>합니다.</li>
+      <li>검사 시기·절차의 최종 판단은 관할 행정청과 검사기관의 회신에 따릅니다.</li>
+    </ul>
+    <h5>개인정보 처리</h5>
+    입력하신 날짜·점검값은 이 기기의 브라우저에만 저장되며 어떤 서버로도 전송되지 않습니다.
+    종합 의견 시트에서 AI 의견을 요청하는 경우에만 요약 내용이 외부로 전송됩니다.
+  </div>
+</div>
+<header>
+  <div class="head-in">
+    <div class="top">
+      <h1>폐기물처리시설 검사 안내</h1>
+      <div class="facpick">
+        <label for="fac">시설 종류</label>
+        <select id="fac"></select>
+      </div>
+    </div>
+    <nav id="nav">
+      <button data-p="ai" data-tone="b" aria-current="true">법령 AI 어시스턴트</button>
+      <button data-p="self" data-tone="c">사전 모의점검</button>
+      <button data-p="rev" data-tone="d">종합 의견</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="pane on" id="p-ai"></section>
+  <section class="pane" id="p-self"></section>
+  <section class="pane" id="p-rev"></section>
+  <footer>
+    이 자료는 안내용입니다. 법령은 수시로 개정되므로 신청·이행 전 국가법령정보센터(law.go.kr)의 시행 중인 원문과 관할 검사기관 안내를 확인하십시오.<br>
+    올리신 정보는 이 컴퓨터를 벗어나지 않습니다. 다만 종합 의견 시트에서 AI 의견을 요청하면 요약 내용이 외부로 전송됩니다.
+  </footer>
+</div>
+<button class="btn ghost sm prt" id="print">인쇄</button>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => (s||"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+/* ==========================================================
+   시설 데이터
+   ========================================================== */
+const FAC = {
+incin:{ name:"소각시설", sheet:"별표 1",
+  target:"폐기물 소각시설. 시간당 소각능력 25킬로그램 미만인 소각시설은 설치·운영할 수 없습니다.",
+  targetSrc:"시행규칙 제36조",
+  cyc:{first:[3,'y'], next:[3,'y'], tms:true, win:30, src:"시행규칙 제41조제5항제1호"},
+  notes:[
+   ["측정기기 특례","「대기환경보전법」 제32조에 따른 측정기기를 설치하고 굴뚝원격감시체계관제센터와 연결하여 정상 운영하는 경우, 최초 정기검사 기준일이 사용개시일부터 5년이 되는 날로 연장됩니다."],
+   ["주변지역 영향조사","1일 처분능력 50톤 이상인 사업장폐기물 소각시설은 주변 지역에 미치는 영향을 3년마다 조사해 제출해야 합니다.<span class='src'>법 제31조제3항</span>"]],
+  items:[
+   {n:"연소실 출구온도", t:"num", u:"℃", note:"운전기록상 유지온도"},
+   {n:"연소가스 체류시간", t:"num", u:"초", note:"설계값 및 운전조건 기준"},
+   {n:"배출가스 일산화탄소 농도", t:"num", u:"ppm", note:"4시간 평균값 기준 여부 확인"},
+   {n:"바닥재 열작감량", t:"num", u:"%"},
+   {n:"온도측정계 설치 및 교정 기록", t:"yn"},
+   {n:"자동온도조절장치 정상 작동", t:"yn"},
+   {n:"보조연소장치 작동 상태", t:"yn"},
+   {n:"반입폐기물 성상 확인 기록", t:"yn", note:"지정폐기물 혼입 방지"},
+   {n:"대기오염방지시설 가동 및 운전기록", t:"yn"},
+   {n:"방지시설 약품·흡착제 투입 기록", t:"yn"},
+   {n:"측정기기(TMS) 설치·관제센터 연결", t:"yn", note:"미설치 시 '아니오' — 검사주기 연장 요건일 뿐 의무는 별도"},
+   {n:"배출가스 자가측정 결과 보관", t:"yn"},
+   {n:"소각재 지정폐기물 해당 여부 확인", t:"yn"},
+   {n:"소각재 반출·처리 기록", t:"yn"},
+   {n:"주변지역 영향조사 이행", t:"yn", note:"1일 50톤 이상만 대상 — 미해당 시 '해당없음'"}],
+  faq:[
+   ["TMS를 달면 검사 주기가 정말 늘어나나요?",
+    "<p>최초 정기검사에 한해 기준일이 사용개시일부터 3년에서 5년으로 연장됩니다. 측정기기를 설치하고 굴뚝원격감시체계관제센터와 연결하여 <b>정상적으로 운영되는 경우</b>라는 조건이 붙습니다.<span class='src'>시행규칙 제41조제5항제1호</span></p><p>2회 이후 정기검사는 최종 정기검사일부터 3년으로 동일합니다.</p>"]]},
+
+landfill:{ name:"매립시설", sheet:"별표 2",
+  target:"폐기물 매립시설. 사업장 지정폐기물 매립시설과 일반폐기물 매립시설이 모두 포함됩니다.",
+  targetSrc:"시행규칙 제41조제2항",
+  cyc:{first:[1,'y'], next:[3,'y'], tms:false, win:30, src:"시행규칙 제41조제5항제2호"},
+  notes:[
+   ["최초와 이후 주기가 다릅니다","<b>최초 정기검사는 1년, 2회 이후는 3년</b>입니다. 다른 시설과 달라 첫 검사를 놓치기 쉽습니다."],
+   ["별도의 검사","정기검사 외에 <b>사용종료 검사</b>와 <b>사후관리 정기검사</b>가 따로 있습니다. 사용종료를 계획하고 계시면 관할 행정청에 절차를 미리 확인하십시오.<span class='src'>원문확인 필요</span>"],
+   ["주변지역 영향조사","매립면적 1만 제곱미터 이상 사업장 지정폐기물 매립시설, 15만 제곱미터 이상 사업장 일반폐기물 매립시설은 3년마다 조사·제출 대상입니다.<span class='src'>법 제31조제3항</span>"]],
+  items:[
+   {n:"차수시설 상태 확인 기록", t:"yn"},
+   {n:"침출수 집배수시설 정상 작동", t:"yn"},
+   {n:"침출수 이송관로 점검 기록", t:"yn"},
+   {n:"침출수 처리시설 가동 및 방류수질 기록", t:"yn"},
+   {n:"침출수 발생량", t:"num", u:"㎥/일"},
+   {n:"매립가스 포집설비 가동", t:"yn"},
+   {n:"매립가스 활용 또는 연소처리 기록", t:"yn"},
+   {n:"일일복토 실시 기록", t:"yn"},
+   {n:"일일복토 두께", t:"num", u:"cm"},
+   {n:"중간복토 실시 여부", t:"yn", note:"해당 구역 없으면 '해당없음'"},
+   {n:"지하수 검사정 측정 기록", t:"yn"},
+   {n:"우수배제시설 관리 상태", t:"yn"},
+   {n:"계량시설 통과 후 반입", t:"yn"},
+   {n:"매립량 및 잔여 매립용량 기록", t:"yn"},
+   {n:"제방·사면 안정 상태 점검", t:"yn"},
+   {n:"주변지역 영향조사 이행", t:"yn", note:"면적 요건 미해당 시 '해당없음'"}],
+  faq:[
+   ["최초 검사와 이후 검사 주기가 왜 다른가요?",
+    "<p>시행규칙 제41조제5항제2호가 그렇게 정하고 있습니다. 최초는 사용개시일부터 1년이 되는 날, 2회 이후는 최종 정기검사일부터 3년이 되는 날입니다.</p><p><b>사용개시 후 1년 시점을 놓치는 사례가 많습니다.</b> 사용개시일 기준으로 미리 일정을 잡아두십시오.</p>"]]},
+
+sterile:{ name:"멸균분쇄시설", sheet:"별표 3",
+  target:"의료폐기물 등을 대상으로 하는 멸균분쇄시설.",
+  targetSrc:"시행규칙 제41조제2항",
+  cyc:{first:[3,'m'], next:[3,'m'], tms:false, win:0, src:"시행규칙 제41조제5항제3호"},
+  notes:[
+   ["주기가 매우 짧습니다","<b>3개월마다</b> 받아야 합니다. 연 4회이므로 담당자를 지정해 일정을 관리하시는 편이 안전합니다."],
+   ["전후 30일 규정 적용 제외","시행규칙 제41조제5항 본문 단서에서 멸균분쇄시설은 제3호의 기간을 말한다고 규정합니다. <b>운용 방식은 검사기관에 반드시 확인하십시오.</b><span class='src'>원문확인 필요</span>"]],
+  items:[
+   {n:"멸균 온도", t:"num", u:"℃"},
+   {n:"멸균 압력", t:"num", u:"kgf/㎠", note:"kPa로 관리하는 경우 단위 환산 확인"},
+   {n:"멸균 유지시간", t:"num", u:"분"},
+   {n:"온도·압력·시간 자동기록장치 작동", t:"yn"},
+   {n:"멸균성능 검사(생물학적 지표) 기록", t:"yn"},
+   {n:"분쇄물 입도", t:"num", u:"mm"},
+   {n:"의료폐기물 보관기준 준수", t:"yn"},
+   {n:"냉장보관시설 온도", t:"num", u:"℃"},
+   {n:"인계·인수 내용 전산 입력(올바로)", t:"yn", note:"법 제18조제3항"},
+   {n:"멸균분쇄 잔재물 위탁처리 기록", t:"yn"},
+   {n:"작업자 보호구 지급·착용", t:"yn"}],
+  faq:[
+   ["3개월마다면 연 4회인가요?",
+    "<p>그렇습니다. 최초는 사용개시일부터 3개월, 이후에는 최종 정기검사일부터 3개월마다입니다.<span class='src'>시행규칙 제41조제5항제3호</span></p><p>일정이 밀리면 다음 주기가 연쇄적으로 밀리므로, 결과서 발급일을 받는 즉시 다음 신청일을 달력에 등록하시길 권합니다.</p>"]]},
+
+food:{ name:"음식물류 폐기물 처리시설", sheet:"별표 4",
+  target:"음식물류 폐기물을 처리하는 시설로서 1일 처리능력 100킬로그램 이상인 시설. 중간처리 후 새로 발생한 폐기물을 처리하는 시설도 포함됩니다.",
+  targetSrc:"시행규칙 제41조제2항제4호",
+  cyc:{first:[1,'y'], next:[1,'y'], tms:false, win:30, src:"시행규칙 제41조제5항제4호"},
+  notes:[
+   ["처리방식별로 검사방법이 다릅니다","퇴비화·사료화·감량화·혐기성분해·부숙토생산·지렁이분변토생산·기타시설로 구분되며, 사전 모의점검에서 방식을 선택하실 수 있습니다.<span class='src'>세부 검사방법 규정 제2조제8호</span>"],
+   ["1일 처리능력 100kg 미만","검사 대상에서 제외됩니다. 다만 설치 승인·신고 등 다른 의무는 별개로 적용됩니다."]],
+  sub:["퇴비화","사료화","감량화","혐기성분해","부숙토생산","지렁이분변토생산","기타시설"],
+  items:[
+   {n:"이물질 선별·제거 설비 가동", t:"yn"},
+   {n:"악취방지시설 설치 및 가동", t:"yn"},
+   {n:"배출수 처리 및 배출 적정", t:"yn"},
+   {n:"1일 처리능력 대비 실제 투입량", t:"num", u:"%", note:"설계 처리능력 초과 여부"}],
+  subItems:{
+   "퇴비화":[{n:"부숙기간 확보",t:"num",u:"일"},{n:"부숙도 측정·기록",t:"yn"},
+     {n:"비료관리법 공정규격 적합 성적서",t:"yn",note:"비료관리법 제4조"},
+     {n:"생산물 함수율",t:"num",u:"%"},{n:"생산물 염분(NaCl)",t:"num",u:"%"},{n:"발효조 온도",t:"num",u:"℃"}],
+   "사료화":[{n:"사료관리법상 시설기준 적합",t:"yn",note:"사료관리법 제8조제2항"},
+     {n:"가열·멸균 공정 온도",t:"num",u:"℃"},{n:"가열·멸균 유지시간",t:"num",u:"분"},
+     {n:"온도·시간 자동기록장치 작동",t:"yn"},{n:"생산물 성분 검사성적서",t:"yn"},{n:"생산물 수분",t:"num",u:"%"}],
+   "감량화":[{n:"감량률",t:"num",u:"%",note:"(투입량−산출량)÷투입량"},{n:"발효·건조 온도",t:"num",u:"℃"},
+     {n:"감량 후 잔재물 처리 경로 확인",t:"yn"},{n:"배출수 중 고형물 관리 기록",t:"yn"}],
+   "혐기성분해":[{n:"소화조 운전온도",t:"num",u:"℃"},{n:"소화조 체류시간",t:"num",u:"일"},
+     {n:"바이오가스 발생량 기록",t:"yn"},{n:"메탄 농도",t:"num",u:"%"},
+     {n:"가스 안전설비 점검(압력·누출)",t:"yn"},{n:"소화액 처리 경로 확인",t:"yn"}],
+   "부숙토생산":[{n:"부숙기간",t:"num",u:"일"},{n:"부숙도 판정 기록",t:"yn"},
+     {n:"생산물 함수율",t:"num",u:"%"},{n:"생산물 용도·공급처 확인",t:"yn"}],
+   "지렁이분변토생산":[{n:"지렁이 사육시설 관리 상태",t:"yn"},{n:"먹이 공급량 기록",t:"yn"},
+     {n:"분변토 생산량 기록",t:"yn"},{n:"사육상 온도",t:"num",u:"℃"}],
+   "기타시설":[{n:"처리공정 설명자료 보유",t:"yn"},{n:"공정별 운전기록 유지",t:"yn"},
+     {n:"생산물 용도 및 판로 확인",t:"yn"},{n:"주요 공정 운전조건",t:"txt"}]},
+  faq:[
+   ["기한 내에 신청만 하면 되나요, 결과서까지 받아야 하나요?",
+    "<p>해석이 갈렸던 쟁점입니다. 환경부는 검사기간 내에 검사를 받고 <b>검사결과서까지 발급받아야</b> 한다는 입장이었고, 법제처는 검사희망일 15일 전까지 신청서를 제출했다면 정기검사 규정을 준수한 것으로 보아야 한다고 해석한 바 있습니다.</p><p>법제처는 “최종 정기검사일”이 실제 검사를 받은 날인지 결과서를 발급받은 날인지 혼란의 여지가 있다며 법령정비를 권고하기도 했습니다.</p><p><b>실무적으로는 기간 내에 결과서 발급까지 마치도록 일정을 잡으시는 편이 안전합니다.</b></p>"]]},
+
+heat:{ name:"소각열회수시설", sheet:"별표 6",
+  target:"폐기물을 소각하면서 발생하는 열을 회수하여 이용하는 시설.",
+  targetSrc:"시행규칙 제41조제2항",
+  cyc:{first:[3,'y'], next:[3,'y'], tms:true, win:30, src:"시행규칙 제41조제5항제1호"},
+  notes:[
+   ["소각시설과 같은 주기","소각시설·열분해시설과 함께 제1호에 규정되어 주기가 동일합니다. 측정기기 관제센터 연결 시 최초 기준일이 5년으로 연장됩니다."],
+   ["에너지 회수기준","「폐기물관리법 시행규칙」 제3조의 에너지 회수기준이 함께 적용됩니다. 회수효율 산정 근거를 갖추어 두십시오.<span class='src'>시행규칙 제3조</span>"]],
+  items:[
+   {n:"에너지 회수효율", t:"num", u:"%", note:"시행규칙 제3조 회수기준 확인"},
+   {n:"회수열 이용 실적 기록", t:"yn"},
+   {n:"연소실 출구온도", t:"num", u:"℃"},
+   {n:"배출가스 일산화탄소 농도", t:"num", u:"ppm"},
+   {n:"바닥재 열작감량", t:"num", u:"%"},
+   {n:"보일러 운전 기록", t:"yn"},
+   {n:"반입폐기물 성상 확인 기록", t:"yn"},
+   {n:"대기오염방지시설 가동 및 운전기록", t:"yn"},
+   {n:"측정기기(TMS) 설치·관제센터 연결", t:"yn"},
+   {n:"소각재 반출·처리 기록", t:"yn"}],
+  faq:[]},
+
+cement:{ name:"시멘트 소성로", sheet:"별표 5",
+  target:"폐기물을 연료로 사용하는 시멘트 소성로에 한정됩니다.",
+  targetSrc:"시행규칙 제41조제2항제5호",
+  cyc:{first:[3,'y'], next:[3,'y'], tms:true, win:30, src:"시행규칙 제41조제5항제5호"},
+  notes:[
+   ["측정기기 특례","측정기기를 설치하고 굴뚝원격감시체계관제센터와 연결하여 정상 운영하는 경우 최초 기준일이 5년으로 연장됩니다."],
+   ["시설 분류","시멘트 소성로는 종전에 소각시설로 관리되다가 재활용시설로 분류가 변경되었습니다. 관련 서류의 시설 분류 표기를 확인하십시오.<span class='src'>원문확인 필요</span>"]],
+  items:[
+   {n:"소성로 운전온도", t:"num", u:"℃"},
+   {n:"예열기 운전 상태", t:"yn"},
+   {n:"폐기물 투입량 기록", t:"yn"},
+   {n:"폐기물 투입비율", t:"num", u:"%"},
+   {n:"반입폐기물 성상 확인 기록", t:"yn"},
+   {n:"대기오염방지시설 가동 및 운전기록", t:"yn"},
+   {n:"측정기기(TMS) 설치·관제센터 연결", t:"yn"},
+   {n:"배출가스 자가측정 결과 보관", t:"yn"},
+   {n:"보조연료 사용 기록", t:"yn"}],
+  faq:[]},
+
+pyro:{ name:"열분해시설", sheet:"별표 7",
+  target:"폐플라스틱 등을 열분해하여 처리하는 시설.",
+  targetSrc:"시행규칙 제41조제2항",
+  cyc:{first:[3,'y'], next:[3,'y'], tms:true, win:30, src:"시행규칙 제41조제5항제1호"},
+  notes:[
+   ["비교적 최근 신설","열분해시설의 세부검사방법(별표 7)은 2023년 개정으로 신설되었습니다. 검사 경험이 축적되는 중이므로 검사기관과 사전 협의를 권합니다.<span class='src'>검사방법 규정 2023. 5. 10. 개정</span>"]],
+  items:[
+   {n:"열분해 반응온도", t:"num", u:"℃"},
+   {n:"반응기 체류시간", t:"num", u:"분"},
+   {n:"투입 폐기물 성상 관리 기록", t:"yn"},
+   {n:"생성유·생성가스 관리 기록", t:"yn"},
+   {n:"잔재물(char) 처리 기록", t:"yn"},
+   {n:"비응축가스 처리설비 가동", t:"yn"},
+   {n:"가스 안전설비 점검(압력·누출)", t:"yn"},
+   {n:"대기오염방지시설 가동 및 운전기록", t:"yn"}],
+  faq:[]}
+};
+
+const COMMON_ITEMS = [
+ {n:"폐기물처리업 허가증 또는 신고증명서 비치", t:"yn"},
+ {n:"사용개시 신고 필증 보관", t:"yn", note:"시행규칙 제41조제1항"},
+ {n:"직전 검사결과서 보관", t:"yn", note:"다음 정기검사 기산일 근거"},
+ {n:"시설 설계도서·처리공정도 보유", t:"yn"},
+ {n:"운영일지 작성·보관", t:"yn"},
+ {n:"가동시간 기록 유지", t:"yn"},
+ {n:"기술관리인 선임 또는 기술관리 대행계약", t:"yn", note:"규모 요건 미해당 시 '해당없음' — 시행령 제15조"},
+ {n:"계량시설 설치 및 정상 작동", t:"yn"},
+ {n:"반입 폐기물 계량 기록 유지", t:"yn"},
+ {n:"인계·인수 내용 전산 입력(올바로)", t:"yn", note:"법 제18조제3항"},
+ {n:"자가측정 주기 준수 및 결과 보관", t:"yn", note:"대상 아니면 '해당없음'"},
+ {n:"투입량·산출물량 관리대장 유지", t:"yn"},
+ {n:"잔재물·부산물 처리 기록", t:"yn"},
+ {n:"고장·비상 조치 기록", t:"yn"}
+];
+
+const COMMON_FAQ = [
+ ["검사는 어떤 순서로 신청하나요?",
+  "<p><b>1) 사용개시 신고</b> — 사용개시일 10일 전까지 사용개시신고서를 시·도지사 또는 지방환경관서의 장에게 제출합니다(별지 제27호·제28호서식).<span class='src'>시행규칙 제41조제1항</span></p><p><b>2) 검사 신청</b> — 검사를 받으려는 날 15일 전까지 검사신청서를 검사기관에 제출합니다(별지 제29호·제30호서식). 시설 설계도서·운영계획서 등을 첨부합니다.<span class='src'>시행규칙 제41조제7항</span></p><p><b>3) 검사·결과서 발급</b> — 검사기관이 현장검사 후 결과서를 발급합니다. <b>이 발급일이 다음 정기검사의 기산일</b>이므로 반드시 보관하십시오.</p>"],
+ ["검사기관은 어디인가요?",
+  "<p>검사기관은 폐기물관리법 시행규칙 제41조제3항에 규정되어 있습니다.</p><p><b>기관별 관할과 접수 방법은 변동될 수 있으므로, 신청 전 관할 시·군·구 폐기물 담당부서 또는 검사기관에 직접 확인하십시오.</b></p>"],
+ ["검사 기준일을 넘기면 바로 위반인가요?",
+  "<p>기준일 <b>전후 각각 30일 이내</b>가 검사기간입니다(멸균분쇄시설은 별도).<span class='src'>시행규칙 제41조제5항</span></p><p>이 구간을 넘기면 정기검사 미이행이 되어 행정처분 대상이 되므로, 여유를 두고 신청하십시오.</p>"],
+ ["기술진단을 받으면 정기검사가 면제되나요?",
+  "<p>검사기간 내에 「환경기술 및 환경산업 지원법」 제13조에 따라 같은 시설에 대한 기술진단을 받으면 정기검사를 받은 것으로 봅니다.<span class='src'>법 제30조제2항</span></p><p>다만 같은 법 제13조제3항에 따른 요청을 이행하지 않은 경우는 제외되며, <b>검사기간 내</b>여야 합니다.</p>"],
+ ["시설을 증설하거나 변경하면 다시 검사를 받아야 하나요?",
+  "<p>변경승인 또는 변경신고 사유 중 일정한 경우에 해당하면 다시 받아야 합니다.<span class='src'>시행규칙 제41조제4항</span></p><p>해당 사유는 시행규칙 제39조제3항, 제40조제3항에 열거되어 있습니다. <b>착수 전에</b> 관할 행정청에 확인하십시오.</p>"],
+ ["부적합 판정을 받으면 어떻게 되나요?",
+  "<p>설치검사에서 적합판정을 받지 않은 시설은 사용할 수 없습니다.<span class='src'>법 제30조제1항</span></p><p>보완 후 재검사 절차와 기한은 검사기관 안내에 따릅니다. 지적사항을 받으셨다면 보완 계획과 일정을 검사기관 및 관할 행정청과 먼저 협의하십시오.</p>"]
+];
+
+const LAWS = [
+{ttl:"폐기물처리시설의 검사 — 설치검사", cite:"폐기물관리법 제30조제1항", dt:"", chk:true, fac:[],
+ txt:"폐기물처리시설을 설치한 자는 환경부령으로 정하는 검사기관으로부터 검사를 받아야 하며, 검사 결과 적합판정을 받지 아니한 폐기물처리시설을 사용해서는 아니 된다."},
+{ttl:"폐기물처리시설의 검사 — 정기검사 및 기술진단 갈음", cite:"폐기물관리법 제30조제2항", dt:"", chk:false, fac:[],
+ txt:"폐기물처리시설을 설치·운영하는 자는 시행규칙 제41조제5항에서 정하는 기간마다 검사기관으로부터 정기검사를 받아야 한다. 이 경우 검사기간 내에 「환경기술 및 환경산업 지원법」 제13조에 따라 같은 시설에 대한 기술진단(같은 법 제13조제3항에 따른 요청을 이행하지 아니한 경우는 제외한다)을 받으면 정기검사를 받은 것으로 본다."},
+{ttl:"사용개시 신고 — 사용개시일 10일 전까지", cite:"폐기물관리법 시행규칙 제41조제1항", dt:"2022-11-29", chk:false, fac:[],
+ txt:"법 제29조제4항에 따라 폐기물처리시설의 설치자는 해당 시설의 사용개시일 10일 전까지 별지 제27호서식이나 별지 제28호서식의 사용개시신고서에 관련 서류를 첨부하여 시·도지사나 지방환경관서의 장에게 제출해야 한다."},
+{ttl:"검사 신청 — 검사일 15일 전까지", cite:"폐기물관리법 시행규칙 제41조제7항", dt:"2024-02-06", chk:false, fac:[],
+ txt:"법 제30조제1항 및 제2항에 따른 검사를 받으려는 자는 검사를 받으려는 날 15일 전까지 별지 제29호서식 또는 별지 제30호서식의 검사신청서에 관련 서류를 첨부하여 폐기물처리시설 검사기관에 제출해야 한다."},
+{ttl:"검사기준의 위임", cite:"폐기물관리법 시행규칙 제41조제6항", dt:"2024-02-06", chk:false, fac:[],
+ txt:"법 제30조에 따른 검사를 위한 검사기준은 별표 10과 같다."},
+{ttl:"변경 시 재검사 대상", cite:"폐기물관리법 시행규칙 제41조제4항", dt:"2024-02-06", chk:true, fac:[],
+ txt:"법 제30조제1항 후단에서 “환경부령으로 정하는 경우”란 다음 각 호의 경우를 말한다.\n1. 제39조제3항제2호 및 제4호부터 제6호까지의 규정 중 어느 하나에 해당하여 변경승인을 받은 경우\n2. 제40조제3항제3호부터 제5호까지의 규정 중 어느 하나에 해당하여 변경신고를 한 경우"},
+{ttl:"설치검사·정기검사의 정의", cite:"세부 검사방법에 관한 규정 제2조제1호·제2호", dt:"", chk:false, fac:[],
+ txt:"1. “설치검사”란 폐기물처리시설의 설치자가 제3조의 검사기준 및 방법에 따라 해당 시설의 형식·기능 등이 설치기준에 적합한지 여부에 대하여 받는 검사로서 법 제30조제1항에 따른 검사를 말한다.\n2. “정기검사”란 폐기물처리시설이 설치기준 및 관리기준에 적합하게 유지·관리되고 있는지를 확인하기 위하여 법 제30조제2항에 따라 정기적으로 받는 검사를 말한다."},
+{ttl:"설치기준 / 관리기준", cite:"폐기물관리법 시행규칙 별표 9 / 별표 8", dt:"", chk:true, fac:[],
+ txt:"[요약] 폐기물처리시설은 시행규칙 별표 9의 설치기준에 맞게 설치하여야 하며, 별표 8의 관리기준에 따라 운영·관리하여야 한다.\n※ 시설별 구체 항목은 별표 원문을 확인하십시오. 요약 인용은 하지 마십시오."},
+{ttl:"검사 미이행·부적합 시설 사용에 대한 행정처분", cite:"폐기물관리법 제27조제2항제11호", dt:"", chk:false, fac:[],
+ txt:"「폐기물관리법」 제30조제1항·제2항을 위반하여 검사를 받지 아니하거나 적합판정을 받지 않은 폐기물처리시설을 사용한 경우에는 「폐기물관리법」 제27조제2항제11호, 같은 법 시행령 별표 6, 같은 법 시행규칙 제83조제1항 및 별표 21에 따른 행정처분을 받는다."},
+{ttl:"세부검사방법 별표 구성", cite:"폐기물처리시설의 검사방법에 관한 규정", dt:"2023-05-10", chk:false, fac:[],
+ txt:"시설별 세부검사방법은 다음 별표에서 정한다.\n별표 1 폐기물 소각시설 / 별표 2 폐기물 매립시설 / 별표 3 멸균분쇄시설 / 별표 4 음식물류폐기물처리시설 / 별표 5 시멘트 소성로 / 별표 6 소각열회수시설 / 별표 7 열분해시설\n※ 각 별표는 첨부파일 형태로 제공됩니다. 국가법령정보센터에서 원문을 확인하십시오."},
+{ttl:"정기검사 시기 — 소각·소각열회수·열분해시설", cite:"폐기물관리법 시행규칙 제41조제5항제1호", dt:"2024-02-06", chk:false, fac:["incin","heat","pyro"],
+ txt:"법 제30조제2항에서 “환경부령으로 정하는 기간”이란 다음 각 호의 기준일 전후 각각 30일 이내의 기간을 말한다.\n1. 소각시설, 소각열회수시설 및 열분해시설: 최초 정기검사는 사용개시일부터 3년이 되는 날(「대기환경보전법」 제32조에 따른 측정기기를 설치하고 같은 법 시행령 제19조제1항제1호의 굴뚝원격감시체계관제센터와 연결하여 정상적으로 운영되는 경우에는 사용개시일부터 5년이 되는 날), 2회 이후의 정기검사는 최종 정기검사일부터 3년이 되는 날"},
+{ttl:"정기검사 시기 — 매립시설", cite:"폐기물관리법 시행규칙 제41조제5항제2호", dt:"2024-02-06", chk:false, fac:["landfill"],
+ txt:"2. 매립시설: 최초 정기검사는 사용개시일부터 1년이 되는 날, 2회 이후의 정기검사는 최종 정기검사일부터 3년이 되는 날"},
+{ttl:"정기검사 시기 — 멸균분쇄시설", cite:"폐기물관리법 시행규칙 제41조제5항제3호", dt:"2024-02-06", chk:false, fac:["sterile"],
+ txt:"3. 멸균분쇄시설: 최초 정기검사는 사용개시일부터 3개월, 2회 이후의 정기검사는 최종 정기검사일부터 3개월\n※ 제41조제5항 본문 단서에 따라 멸균분쇄시설은 “기준일 전후 각각 30일” 규정이 아니라 제3호의 기간을 적용합니다."},
+{ttl:"정기검사 시기 — 음식물류 폐기물 처리시설", cite:"폐기물관리법 시행규칙 제41조제5항제4호", dt:"2024-02-06", chk:false, fac:["food"],
+ txt:"4. 음식물류 폐기물 처리시설: 최초 정기검사는 사용개시일부터 1년이 되는 날, 2회 이후의 정기검사는 최종 정기검사일부터 1년이 되는 날"},
+{ttl:"정기검사 시기 — 시멘트 소성로", cite:"폐기물관리법 시행규칙 제41조제5항제5호", dt:"2024-02-06", chk:false, fac:["cement"],
+ txt:"5. 시멘트 소성로: 최초 정기검사는 사용개시일부터 3년이 되는 날(측정기기를 설치하고 굴뚝원격감시체계관제센터와 연결하여 정상적으로 운영되는 경우에는 사용개시일부터 5년이 되는 날), 2회 이후의 정기검사는 최종 정기검사일부터 3년이 되는 날"},
+{ttl:"검사 대상 — 음식물류 폐기물 처리시설", cite:"폐기물관리법 시행규칙 제41조제2항제4호", dt:"2024-02-06", chk:false, fac:["food"],
+ txt:"음식물류 폐기물 처리시설(음식물류 폐기물에 대한 중간처리 후 새로 발생한 폐기물을 처리하는 시설을 포함한다)\n※ 음식물류 폐기물을 처리하는 시설로서 1일 처리능력 100킬로그램 이상인 시설을 “음식물류 폐기물 처리시설”이라 한다."},
+{ttl:"음식물류폐기물처리시설의 처리방식 정의", cite:"세부 검사방법에 관한 규정 제2조제8호", dt:"", chk:false, fac:["food"],
+ txt:"다만, 1일 처리능력 100킬로그램 미만인 시설은 검사대상시설에서 제외한다.\n가. “퇴비화”란 비료관리법 제4조에 따라 공정규격이 설정된 비료 또는 지정된 부산물비료를 제조하는 데 적합한 시설을 갖추고 퇴비를 생산하는 일련의 공정을 말한다.\n나. “사료화”란 사료관리법 제8조제2항에 따른 기준에 적합한 시설을 갖추고 사료를 생산하는 일련의 공정을 말한다.\n다. “감량화”란 발효, 소멸, 건조 등 방법으로 감량하는 일련의 공정을 말한다.\n라. “혐기성분해”란 액상 및 가스상 물질로 변환시키는 일련의 공정을 말한다.\n마. “부숙토생산”, 바. “지렁이분변토생산”, 사. “기타시설”"},
+{ttl:"시간당 25킬로그램 미만 소각시설 설치·운영 금지", cite:"폐기물관리법 시행규칙 제36조", dt:"", chk:true, fac:["incin","heat"],
+ txt:"폐기물처리시설은 별표 9의 설치기준에 맞게 설치하되, 시간당 폐기물 소각능력이 25킬로그램 미만인 폐기물 소각시설을 설치·운영해서는 안 된다."},
+{ttl:"주변지역 영향조사 — 3년마다", cite:"폐기물관리법 제31조제3항", dt:"", chk:false, fac:["incin","landfill"],
+ txt:"다음 중 어느 하나에 해당하는 폐기물처리시설을 설치·운영하는 자는 그 시설의 설치·운영이 주변 지역에 미치는 영향을 3년마다 조사하고 그 결과를 제출해야 한다.\n1. 1일 처분능력이 50톤 이상인 사업장폐기물 소각시설\n2. 매립면적 1만 제곱미터 이상의 사업장 지정폐기물 매립시설\n3. 매립면적 15만 제곱미터 이상의 사업장 일반폐기물 매립시설"},
+{ttl:"법령해석 — 기한 내 신청과 결과서 발급의 관계", cite:"법제처 법령해석 (정기검사)", dt:"", chk:true, fac:["food"],
+ txt:"폐기물처리시설의 운영자가 검사주기 내에 검사를 받지 않았거나 검사결과서를 발급받지 않았다고 하더라도, 검사주기 내에 정기검사를 받겠다고 희망하는 검사신청서를 검사희망일의 15일 전까지 제출하였다면 법 제30조제2항에 따른 정기검사 규정을 준수한 것으로 보아야 한다는 취지의 해석이 있었다.\n※ 환경부는 검사결과서 발급까지 필요하다는 입장이었습니다. 개별 사안은 관할 행정청 회신에 따르십시오."}
+];
+
+/* ==========================================================
+   상태
+   ========================================================== */
+let CUR="incin", SUB="", ITEMS=[], VALS={}, EDIT=false;
+let QLOG=[], LASTCALC=null;
+const SKEY="wf-inspect-v2";
+const AI={key:"", model:"claude-sonnet-5", on:false};
+const AKEY="wf-inspect-key";
+
+const f = ()=>FAC[CUR];
+function facOpts(){ $("fac").innerHTML = Object.entries(FAC).map(([k,v])=>'<option value="'+k+'">'+esc(v.name)+'</option>').join(""); }
+function buildItems(){
+  const fx=f(), list=[];
+  COMMON_ITEMS.forEach(x=>list.push(Object.assign({g:"공통"},x)));
+  (fx.items||[]).forEach(x=>list.push(Object.assign({g:fx.name},x)));
+  if(fx.sub && SUB && fx.subItems[SUB]) fx.subItems[SUB].forEach(x=>list.push(Object.assign({g:SUB},x)));
+  return list.map((x,i)=>Object.assign({id:CUR+"_"+(SUB||"-")+"_"+i, op:"", v1:"", v2:""}, x));
+}
+function mergeSaved(fresh, saved){
+  if(!Array.isArray(saved)) return fresh;
+  return fresh.map(it=>{ const s=saved.find(x=>x.id===it.id); return s?Object.assign({},it,{op:s.op,v1:s.v1,v2:s.v2}):it; });
+}
+function loadState(){
+  try{
+    const v=JSON.parse(localStorage.getItem(SKEY)||"{}");
+    if(v.cur && FAC[v.cur]) CUR=v.cur;
+    if(v.sub) SUB=v.sub;
+    VALS=v.vals||{}; QLOG=v.qlog||[]; LASTCALC=v.calc||null;
+    window.__saved=v.items||[];
+  }catch(e){ window.__saved=[]; }
+  try{ const k=localStorage.getItem(AKEY); if(k){ AI.key=k; AI.on=true; } }catch(e){}
+}
+function saveState(){
+  try{ localStorage.setItem(SKEY, JSON.stringify({cur:CUR,sub:SUB,vals:VALS,items:ITEMS,qlog:QLOG.slice(-20),calc:LASTCALC})); }catch(e){}
+}
+
+/* ==========================================================
+   시트 1 — 법령 AI 어시스턴트
+   ========================================================== */
+const norm = s => (s||"").toLowerCase().replace(/[^\uac00-\ud7a3a-z0-9]+/g," ").trim();
+function grams(s){
+  const out=[];
+  norm(s).split(/\s+/).filter(Boolean).forEach(w=>{
+    out.push(w);
+    if(/^[\uac00-\ud7a3]+$/.test(w)&&w.length>1){
+      for(let i=0;i<w.length-1;i++) out.push(w.slice(i,i+2));
+      if(w.length>2) for(let i=0;i<w.length-2;i++) out.push(w.slice(i,i+3));
+    }
+  });
+  return out;
+}
+function pool(){
+  const fx=f();
+  const guide=[
+    {kind:"안내", ttl:"검사가 보는 네 가지 기준", cite:"기준 체계",
+     txt:"설치기준 — 시행규칙 별표 9. 규정된 구조와 설비를 갖추었는지 확인합니다.\n관리기준 — 시행규칙 별표 8. 규정대로 운영·관리하고 있는지 확인합니다.\n검사기준 — 시행규칙 별표 10 (시행규칙 제41조제6항).\n세부검사방법 — 검사방법 규정 "+fx.sheet+". "+fx.name+"의 검사항목과 판정기준이 여기 있습니다.\n※ 별표는 첨부파일 형태로 제공되므로 국가법령정보센터에서 원문을 확인하십시오."},
+    {kind:"안내", ttl:"설치검사와 정기검사는 무엇이 다른가", cite:"검사 종류",
+     txt:"설치검사 — 설치를 마친 뒤 형식·기능이 설치기준에 맞는지 확인합니다. 적합판정을 받지 않은 시설은 사용할 수 없습니다(법 제30조제1항).\n정기검사 — 설치기준과 관리기준에 맞게 유지·관리되고 있는지 확인합니다. "+fx.name+"은 최초 "+uTxt(fx.cyc.first)+", 이후 "+uTxt(fx.cyc.next)+" 주기입니다("+fx.cyc.src+")."},
+    {kind:"안내", ttl:"검사 대상 요건", cite:fx.targetSrc,
+     txt:fx.target.replace(/<[^>]+>/g,"")},
+    {kind:"안내", ttl:"검사를 받지 않으면 어떻게 되는가", cite:"행정처분",
+     txt:"폐기물관리법 제30조제1항·제2항을 위반하여 검사를 받지 않거나 적합판정을 받지 않은 시설을 사용한 경우, 같은 법 제27조제2항제11호, 시행령 별표 6, 시행규칙 제83조제1항 및 별표 21에 따른 행정처분을 받습니다."}
+  ].concat((fx.notes||[]).map(([t,b])=>({kind:"안내", ttl:t, cite:fx.name,
+     txt:b.replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim()})));
+  const laws = LAWS.filter(L=>!L.fac.length||L.fac.includes(CUR))
+    .map(L=>({kind:"조문", ttl:L.ttl, cite:L.cite, txt:L.txt, dt:L.dt, chk:L.chk}));
+  const faqs = COMMON_FAQ.concat(f().faq||[])
+    .map(([q,a])=>({kind:"문답", ttl:q, cite:"안내", txt:a.replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim(), html:a}));
+  return guide.concat(laws, faqs);
+}
+let IDX=null, IDXK="";
+function buildIndex(){
+  const P=pool(), df={};
+  const docs=P.map((c,i)=>{
+    const tf={}, g=grams(c.ttl+" "+c.cite+" "+c.txt);
+    g.forEach(t=>tf[t]=(tf[t]||0)+1);
+    Object.keys(tf).forEach(t=>df[t]=(df[t]||0)+1);
+    grams(c.ttl).forEach(t=>tf[t]=(tf[t]||0)+2);
+    return {i,tf,len:g.length};
+  });
+  IDX={P,df,docs,avg:docs.reduce((a,b)=>a+b.len,0)/(docs.length||1),N:docs.length};
+  IDXK=CUR;
+}
+const SYN=[
+ [["몇 년","주기","언제","얼마나","기간","도래","다음"],"정기검사 사용개시일 최종 정기검사일 되는 날 30일"],
+ [["면제","갈음","대체"],"기술진단 받은 것으로 본다"],
+ [["처벌","벌금","제재","위반","안 받으면","불이익"],"행정처분 적합판정 별표 21"],
+ [["신청","접수","제출","서류","언제까지","절차"],"검사신청서 15일 별지 검사기관 사용개시신고"],
+ [["대상","해당","규모","용량"],"검사대상 100킬로그램 25킬로그램 이상"],
+ [["증설","변경","개조"],"변경승인 변경신고 재검사"],
+ [["항목","판정","기준","합격","불합격"],"검사기준 별표 10 설치기준 관리기준 세부검사방법"],
+ [["tms","굴뚝","자동측정","원격감시"],"측정기기 굴뚝원격감시체계관제센터 5년"],
+ [["어디","기관","누구"],"검사기관 시행규칙 제41조제3항"]
+];
+const expand = q=>{ const n=norm(q),a=[]; SYN.forEach(([k,t])=>{ if(k.some(x=>n.includes(x))) a.push(t); }); return a.join(" "); };
+function ask(query){
+  if(!IDX||IDXK!==CUR) buildIndex();
+  const qs=[...new Set(grams(query))];
+  if(!qs.length) return [];
+  const k1=1.4,b=0.7;
+  return IDX.docs.map(d=>{
+    let s=0;
+    qs.forEach(t=>{
+      const fq=d.tf[t]; if(!fq) return;
+      const idf=Math.log(1+(IDX.N-(IDX.df[t]||0)+0.5)/((IDX.df[t]||0)+0.5));
+      s+=idf*(fq*(k1+1))/(fq+k1*(1-b+b*d.len/IDX.avg));
+    });
+    return {i:d.i,s};
+  }).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,7);
+}
+function hl(text,query){
+  let h=esc(text);
+  const terms=[...new Set(norm(query).split(/\s+/).filter(w=>w.length>1))].sort((a,b)=>b.length-a.length).slice(0,10);
+  terms.forEach(t=>{ const re=new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"gi"); h=h.replace(re,m=>"\u0001"+m+"\u0002"); });
+  return h.replace(/\u0001/g,"<mark>").replace(/\u0002/g,"</mark>");
+}
+const SAMPLES=["정기검사 언제 받아야 하나요","신청 절차와 서류가 궁금합니다","검사기관은 어디인가요","기술진단으로 대체되나요","증설하면 재검사인가요","안 받으면 어떻게 되나요"];
+function renderAI(){
+  const fx=f(), c=fx.cyc;
+  const winTxt = c.win ? "기준일 전후 "+c.win+"일" : "전후 규정 미적용";
+  $("p-ai").innerHTML =
+   '<div class="facts">'
+   + '<div class="fx"><div class="l">정기검사 주기</div><div class="v">최초 <em>'+uTxt(c.first)+'</em></div>'
+     + '<div class="s">2회 이후 '+uTxt(c.next)+(c.tms?' · 측정기기 연결 시 최초 5년':'')+'</div></div>'
+   + '<div class="fx"><div class="l">검사기간</div><div class="v">'+esc(winTxt)+'</div>'
+     + '<div class="s">'+esc(c.src)+'</div></div>'
+   + '<div class="fx"><div class="l">신청 기한</div><div class="v">검사일 <em>15일 전</em></div>'
+     + '<div class="s">사용개시 신고는 10일 전</div></div>'
+   + '<div class="fx"><div class="l">세부검사방법</div><div class="v">'+esc(fx.sheet)+'</div>'
+     + '<div class="s">검사방법 규정 · 첨부파일</div></div>'
+   + '</div>'
+   + '<div class="oneline"><b>검사 대상</b> — '+fx.target+'<span class="src">'+esc(fx.targetSrc)+'</span></div>'
+   + '<div class="card"><h2>법령 AI 어시스턴트</h2>'
+   + '<p class="lede">'+esc(fx.name)+' 기준으로 답합니다. 안내·조문·문답을 함께 찾습니다. 인터넷 없이 동작합니다.</p>'
+   + '<div class="qrow"><input id="q" type="text" placeholder="정기검사는 언제까지 신청해야 하나요?" autocomplete="off">'
+   + '<button class="btn" id="go">찾기</button></div>'
+   + '<div class="chips" id="chips"></div></div>'
+   + '<div id="ans"></div>';
+  $("chips").innerHTML = SAMPLES.map(s=>'<button class="chip">'+esc(s)+'</button>').join("");
+  $("chips").querySelectorAll(".chip").forEach(c2=>c2.onclick=()=>{ $("q").value=c2.textContent; doAsk(); });
+  $("go").onclick=doAsk;
+  $("q").addEventListener("keydown",e=>{ if(e.key==="Enter") doAsk(); });
+  renderAns(pool().map((_,i)=>({i})), "");
+}
+function renderAns(list, query){
+  if(!IDX||IDXK!==CUR) buildIndex();
+  const P=IDX.P;
+  $("ans").innerHTML = list.length ? list.map(x=>{
+    const L=P[x.i];
+    const body = L.html && !query ? L.html
+      : (L.html ? '<div style="line-height:1.75">'+hl(L.txt,query)+'</div>'
+                : '<div style="white-space:pre-wrap;font-size:13.5px;line-height:1.75">'+(query?hl(L.txt,query):esc(L.txt))+'</div>');
+    return '<details class="faq"'+(query?" open":"")+'><summary>'+esc(L.ttl)
+      + '<span class="src">'+esc(L.cite)+'</span></summary><div class="ans">'+body
+      + '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:11px;padding-top:10px;border-top:1px solid var(--line2)">'
+      + '<span class="tag kind">'+esc(L.kind)+'</span>'
+      + (L.dt?'<span class="tag dt">시행 '+esc(L.dt)+'</span>':'')
+      + (L.chk?'<span class="tag chk2">원문확인 필요</span>':'')
+      + (L.kind==="조문"?'<button class="cpy" data-c="'+esc(L.cite)+'">인용문 복사</button>':'')
+      + '</div></div></details>';
+  }).join("") : '<div class="empty"><b>일치하는 내용이 없습니다.</b>다른 표현으로 물어보시거나 국가법령정보센터에서 확인하십시오.</div>';
+  $("ans").querySelectorAll(".cpy").forEach(b=>b.onclick=e=>{
+    e.preventDefault();
+    const L=P.find(x=>x.cite===b.dataset.c);
+    navigator.clipboard.writeText("「"+L.cite+"」\n"+L.txt).then(
+      ()=>{ b.textContent="복사됨"; setTimeout(()=>b.textContent="인용문 복사",1600); },
+      ()=>{ b.textContent="복사 실패"; setTimeout(()=>b.textContent="인용문 복사",1600); });
+  });
+}
+function doAsk(){
+  const q=$("q").value.trim();
+  if(!q){ renderAns(pool().map((_,i)=>({i})),""); return; }
+  QLOG.push({q, at:new Date().toISOString().slice(0,10)});
+  saveState();
+  const full=q+" "+expand(q);
+  renderAns(ask(full), full);
+}
+
+/* ==========================================================
+   시트 2 — 검사 기준·시기
+   ========================================================== */
+function addUnit(d,n,unit){
+  const r=new Date(d.getTime()), day=r.getDate();
+  if(unit==='y') r.setFullYear(r.getFullYear()+n); else r.setMonth(r.getMonth()+n);
+  if(r.getDate()!==day) r.setDate(0);
+  return r;
+}
+const addDays=(d,n)=>{const r=new Date(d.getTime()); r.setDate(r.getDate()+n); return r;};
+const fmt=d=>d.getFullYear()+"년 "+(d.getMonth()+1)+"월 "+d.getDate()+"일";
+const wd=d=>["일","월","화","수","목","금","토"][d.getDay()]+"요일";
+function daysBetween(a,b){
+  const A=new Date(a.getFullYear(),a.getMonth(),a.getDate()), B=new Date(b.getFullYear(),b.getMonth(),b.getDate());
+  return Math.round((B-A)/86400000);
+}
+const uTxt=n=>n[1]==='y'?n[0]+"년":n[0]+"개월";
+const row=(lb,vl)=>'<div class="rrow"><span class="lb">'+lb+'</span><span class="vl">'+vl+'</span></div>';
+function doCalc(){
+  const fx=f(), out=$("out"), v=$("bdate").value;
+  if(!v){ out.innerHTML='<div class="note alert" style="margin-top:16px">날짜를 입력하십시오.</div>'; return; }
+  const base=new Date(v+"T00:00:00");
+  if(isNaN(base)){ out.innerHTML='<div class="note alert" style="margin-top:16px">날짜 형식을 확인하십시오.</div>'; return; }
+  const isFirst=$("basis").value==="first";
+  const tmsOn=fx.cyc.tms&&isFirst&&$("tms")&&$("tms").checked;
+  let rule=isFirst?fx.cyc.first:fx.cyc.next;
+  if(tmsOn) rule=[5,'y'];
+  const std=addUnit(base,rule[0],rule[1]);
+  const win=fx.cyc.win;
+  const open=win?addDays(std,-win):std, close=win?addDays(std,win):std;
+  const apply=addDays(std,-45), today=new Date();
+  const dClose=daysBetween(today,close), dOpen=daysBetween(today,open);
+
+  let band, cls="";
+  if(dClose<0){ band="검사기간이 지났습니다 — 관할 행정청에 즉시 문의하십시오"; cls=" warn"; }
+  else if(dOpen<=0){ band = win?"지금 검사기간입니다 — 종료까지 "+dClose+"일":"검사 기준일입니다"; }
+  else band=(win?"검사기간 시작까지 ":"검사 기준일까지 ")+dOpen+"일 남았습니다";
+
+  LASTCALC={cur:CUR, base:v, basis:$("basis").value, tms:!!tmsOn,
+            std:std.toISOString().slice(0,10), close:close.toISOString().slice(0,10),
+            dClose, dOpen, band, rule:uTxt(rule)};
+  saveState();
+
+  out.innerHTML='<div class="result"><div class="band'+cls+'">'+esc(band)+'</div><div class="rows">'
+    + row("기산일", fmt(base)+" <small>"+wd(base)+"</small>")
+    + row("적용 주기", uTxt(rule)+" <small>"+(isFirst?"최초 정기검사":"2회 이후")+(tmsOn?" · 측정기기 연장 적용":"")+"</small>")
+    + row("검사 기준일", fmt(std)+" <small>"+wd(std)+"</small>")
+    + (win?row("검사기간", fmt(open)+" ~ "+fmt(close)+" <small>기준일 전후 "+win+"일</small>")
+          :row("허용 구간","<span style='color:var(--ember)'>전후 30일 규정 미적용</span> <small>검사기관 확인 필요</small>"))
+    + row("신청 마감", fmt(addDays(close,-15))+" <small>검사 희망일 15일 전 기준</small>")
+    + row("권장 신청일","<span style='color:var(--accent)'>"+fmt(apply)+"</span> <small>일정 지연 대비, 기준일 45일 전</small>")
+    + '</div></div>';
+}
+
+/* ==========================================================
+   시트 3 — 사전 모의점검
+   ========================================================== */
+const OPTXT={">=":"이상","<=":"이하","==":"같음","range":"범위"};
+function stdText(it){
+  if(it.t==="yn") return "기대값: 예";
+  if(it.t==="txt") return "기록만";
+  if(!it.op||it.v1==="") return "기준 미설정";
+  if(it.op==="range") return it.v1+" ~ "+it.v2+(it.u||"");
+  return it.v1+(it.u||"")+" "+OPTXT[it.op];
+}
+function judge(it){
+  const v=VALS[it.id];
+  if(it.t==="txt") return {k:"note", s:"기록"};
+  if(v===undefined||v==="") return {k:"check", s:"미입력"};
+  if(it.t==="yn"){
+    if(v==="해당없음") return {k:"note", s:"해당없음"};
+    return v==="예"?{k:"pass",s:"적합"}:{k:"fail",s:"부적합"};
+  }
+  if(!it.op||it.v1==="") return {k:"check", s:"기준없음"};
+  const x=parseFloat(v),a=parseFloat(it.v1),b=parseFloat(it.v2);
+  if(isNaN(x)) return {k:"check", s:"값오류"};
+  let ok;
+  if(it.op===">=") ok=x>=a; else if(it.op==="<=") ok=x<=a;
+  else if(it.op==="==") ok=x===a; else if(it.op==="range") ok=x>=a&&x<=b;
+  else return {k:"check", s:"기준없음"};
+  return ok?{k:"pass",s:"적합"}:{k:"fail",s:"부적합"};
+}
+function renderSelf(){
+  const fx=f();
+  $("p-self").innerHTML =
+   '<div class="card"><h2>정기검사 시기 확인</h2>'
+   + '<p class="lede">최초 '+uTxt(fx.cyc.first)+', 이후 '+uTxt(fx.cyc.next)+' 주기입니다. 계산은 이 컴퓨터에서만 이루어집니다.'
+   + '<span class="src">'+esc(fx.cyc.src)+'</span></p>'
+   + '<div class="calc">'
+   + '<div><label class="f" for="basis">기준 구분</label><select class="f" id="basis">'
+   + '<option value="first">최초 정기검사 (사용개시일 기준)</option>'
+   + '<option value="next">2회 이후 정기검사 (직전 검사결과서 발급일 기준)</option></select></div>'
+   + '<div><label class="f" for="bdate" id="blabel">사용개시일</label><input class="f" id="bdate" type="date"></div></div>'
+   + (fx.cyc.tms?'<label class="chk"><input type="checkbox" id="tms"> 측정기기를 설치하고 굴뚝원격감시체계관제센터와 연결하여 정상 운영 중 (최초 기준일 5년으로 연장)</label>':'')
+   + '<div style="margin-top:14px"><button class="btn" id="run">계산</button>'
+   + '<button class="btn ghost sm" id="today" style="margin-left:6px">오늘 날짜</button></div>'
+   + '<div id="out"></div>'
+   + '<div class="note warn" style="margin-top:16px"><b>“최종 정기검사일”은 검사결과서를 발급받은 날입니다.</b>'
+   + '<span class="src">시행규칙 제41조제5항·제8항</span> 실제 검사일과 다를 수 있으니 결과서 날짜로 계산하십시오.</div>'
+   + (fx.cyc.win===0?'<div class="note alert"><b>이 시설은 “기준일 전후 30일” 규정이 적용되지 않습니다.</b> '
+       + '시행규칙 제41조제5항 본문 단서에 따라 제3호의 기간을 적용합니다. 허용 구간 운용은 검사기관에 반드시 확인하십시오.</div>':'')
+   + '</div>'
+
+   + '<div class="card"><h2>사전 모의점검</h2>'
+   + '<p class="lede">검사를 신청하기 전에 스스로 확인하는 점검표입니다. 입력값은 이 컴퓨터에만 저장됩니다.</p>'
+   + '<div class="note alert"><b>여기 실린 점검항목은 법정 검사항목이 아닙니다.</b> '
+   + '검사방법 규정 '+esc(fx.sheet)+'는 첨부파일 형태로 관리되어 수록하지 못했습니다. '
+   + '모두 적합이 나와도 실제 검사 결과와 다를 수 있습니다. '
+   + '수치 기준은 비어 있으므로 <b>'+esc(fx.sheet)+' 원문과 검사기관 안내를 확인해 직접 입력</b>하셔야 판정됩니다.</div>'
+   + '<div class="calc">'
+   + (fx.sub?'<div><label class="f" for="sub">처리방식</label><select class="f" id="sub">'
+       + fx.sub.map(s=>'<option value="'+esc(s)+'"'+(SUB===s?' selected':'')+'>'+esc(s)+'</option>').join("")+'</select></div>':'')
+   + '<div><label class="f" for="fname">시설명</label><input class="f" id="fname" placeholder="○○ 처리시설 1호기"></div>'
+   + (fx.sub?'':'<div><label class="f" for="cdate">점검일</label><input class="f" id="cdate" type="date"></div>')
+   + '</div>'
+   + (fx.sub?'<div class="calc" style="margin-top:12px"><div><label class="f" for="cdate">점검일</label><input class="f" id="cdate" type="date"></div><div></div></div>':'')
+   + '<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">'
+   + '<button class="btn" id="judgeb">판정</button>'
+   + '<button class="btn ghost sm" id="editmode">기준값 편집</button>'
+   + '<button class="btn ghost sm" id="ckExp">내보내기</button>'
+   + '<button class="btn ghost sm" id="ckImpBtn">가져오기</button>'
+   + '<input type="file" id="ckImp" accept=".json" style="display:none">'
+   + '<button class="btn ghost sm" id="ckClear">입력 지우기</button>'
+   + '<span id="ckMsg" style="display:none;color:var(--accent);font-size:13px"></span></div></div>'
+   + '<div id="summary"></div><div id="sheet"></div>';
+
+  $("basis").onchange=()=>{
+    $("blabel").textContent = $("basis").value==="first"?"사용개시일":"직전 검사결과서 발급일";
+    const t=$("tms"); if(t) t.disabled = $("basis").value!=="first";
+  };
+  $("today").onclick=()=>{
+    const t=new Date();
+    $("bdate").value=t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0");
+  };
+  $("run").onclick=doCalc;
+  if(LASTCALC && LASTCALC.cur===CUR){
+    $("bdate").value=LASTCALC.base; $("basis").value=LASTCALC.basis;
+    if($("tms")) $("tms").checked=!!LASTCALC.tms;
+    $("basis").onchange(); doCalc();
+  }
+
+  if(fx.sub){
+    if(!SUB) SUB=fx.sub[0];
+    $("sub").value=SUB;
+    $("sub").onchange=()=>{ SUB=$("sub").value; ITEMS=mergeSaved(buildItems(),window.__saved); saveState(); renderSheet(); renderSum(); };
+  } else SUB="";
+  if(VALS.__name) $("fname").value=VALS.__name;
+  if(VALS.__date) $("cdate").value=VALS.__date;
+  $("fname").onchange=()=>{ VALS.__name=$("fname").value; saveState(); };
+  $("cdate").onchange=()=>{ VALS.__date=$("cdate").value; saveState(); };
+  $("judgeb").onclick=()=>{ renderSheet(); renderSum(); };
+  $("editmode").onclick=()=>{ EDIT=!EDIT; $("editmode").textContent=EDIT?"편집 끝내기":"기준값 편집"; renderSheet(); };
+  $("ckExp").onclick=()=>{
+    const p={facility:f().name, sub:SUB, cur:CUR, name:VALS.__name||"", date:VALS.__date||"", items:ITEMS, vals:VALS};
+    const blob=new Blob([JSON.stringify(p,null,1)],{type:"application/json"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob); a.download="사전모의점검_"+f().name+"_"+(VALS.__date||"")+".json"; a.click();
+    URL.revokeObjectURL(a.href);
+  };
+  $("ckImpBtn").onclick=()=>$("ckImp").click();
+  $("ckImp").onchange=e=>{
+    const fl=e.target.files[0]; if(!fl) return;
+    const r=new FileReader();
+    r.onload=()=>{
+      try{
+        const v=JSON.parse(r.result);
+        if(!Array.isArray(v.items)) throw new Error("형식 불일치");
+        if(v.cur&&FAC[v.cur]){ CUR=v.cur; $("fac").value=CUR; }
+        if(v.sub) SUB=v.sub;
+        window.__saved=v.items; VALS=v.vals||{};
+        ITEMS=mergeSaved(buildItems(),window.__saved);
+        saveState(); renderAll(); flash("불러왔습니다.");
+      }catch(err){ flash("가져오지 못했습니다."); }
+      e.target.value="";
+    };
+    r.readAsText(fl);
+  };
+  $("ckClear").onclick=()=>{ VALS={}; saveState(); renderSheet(); renderSum(); };
+  renderSheet(); renderSum();
+}
+function flash(m){ const e=$("ckMsg"); if(!e) return; e.textContent=m; e.style.display="inline"; setTimeout(()=>e.style.display="none",2400); }
+function renderSheet(){
+  const groups=[...new Set(ITEMS.map(x=>x.g))];
+  $("sheet").innerHTML=groups.map(g=>{
+    const rows=ITEMS.filter(x=>x.g===g).map(it=>{
+      const j=judge(it), v=VALS[it.id]===undefined?"":VALS[it.id];
+      let inp;
+      if(it.t==="yn") inp='<select data-v="'+it.id+'">'+['','예','아니오','해당없음']
+        .map(o=>'<option value="'+o+'"'+(v===o?' selected':'')+'>'+(o||'선택')+'</option>').join("")+'</select>';
+      else if(it.t==="num") inp='<input type="number" step="any" data-v="'+it.id+'" value="'+esc(String(v))+'" placeholder="'+(it.u||'값')+'">';
+      else inp='<input type="text" data-v="'+it.id+'" value="'+esc(String(v))+'" placeholder="측정값·특이사항">';
+      const unset=it.t==="num"&&(!it.op||it.v1==="");
+      let ed="";
+      if(EDIT&&it.t==="num"){
+        ed='<div class="edrow"><select data-e="op" data-id="'+it.id+'">'
+          + [["","--"],[">=","이상"],["<=","이하"],["==","같음"],["range","범위"]]
+             .map(([o,l])=>'<option value="'+o+'"'+(it.op===o?' selected':'')+'>'+l+'</option>').join("")
+          + '</select><input data-e="v1" data-id="'+it.id+'" type="number" step="any" value="'+esc(String(it.v1))+'" placeholder="기준값">'
+          + '<input data-e="v2" data-id="'+it.id+'" type="number" step="any" value="'+esc(String(it.v2))+'" placeholder="상한(범위)"></div>';
+      }
+      return '<div class="ck'+(EDIT?' editing':'')+'">'
+        + '<div class="nm">'+esc(it.n)+(it.note?'<small>'+esc(it.note)+'</small>':'')+'</div>'
+        + '<div class="inp">'+inp+'<div class="std'+(unset?' unset':'')+'">'+esc(stdText(it))+'</div>'+ed+'</div>'
+        + '<div class="vd '+j.k+'">'+j.s+'</div></div>';
+    }).join("");
+    return '<div class="grp"><div class="gh">'+esc(g==="공통"?"공통 항목":g+" 항목")+'</div>'+rows+'</div>';
+  }).join("");
+  $("sheet").querySelectorAll("[data-v]").forEach(el=>{
+    el.onchange=()=>{ VALS[el.dataset.v]=el.value; saveState(); renderSheet(); renderSum(); };
+  });
+  $("sheet").querySelectorAll("[data-e]").forEach(el=>{
+    el.onchange=()=>{ const it=ITEMS.find(x=>x.id===el.dataset.id); it[el.dataset.e]=el.value; saveState(); renderSheet(); renderSum(); };
+  });
+}
+function tally(){
+  let pass=0,fail=0,check=0,note=0; const fails=[],checks=[];
+  ITEMS.forEach(it=>{
+    const j=judge(it);
+    if(j.k==="pass") pass++;
+    else if(j.k==="fail"){ fail++; fails.push(it.n); }
+    else if(j.k==="check"){ check++; checks.push(it.n+(j.s==="기준없음"?" (기준 미설정)":"")); }
+    else note++;
+  });
+  return {pass,fail,check,note,fails,checks,total:ITEMS.length};
+}
+function renderSum(){
+  const t=tally();
+  let v;
+  if(t.fail>0) v='<div class="verdict no"><b>부적합 항목이 '+t.fail+'건 있습니다.</b><br>'
+    + esc(t.fails.slice(0,6).join(" · "))+(t.fails.length>6?' 외 '+(t.fails.length-6)+'건':'')
+    + '<br>검사 신청 전에 조치하시거나, 조치가 어려우면 검사기관에 미리 상의하십시오.</div>';
+  else if(t.check>0) v='<div class="verdict no" style="background:var(--amber-soft);border-color:#E4D9B4;color:var(--amber)">'
+    + '<b>확인이 필요한 항목이 '+t.check+'건 남았습니다.</b><br>미입력 항목을 채우시고, 수치 항목은 '
+    + esc(f().sheet)+' 원문에서 기준을 확인해 “기준값 편집”에서 입력하십시오.</div>';
+  else v='<div class="verdict ok"><b>입력한 범위에서는 모두 적합입니다.</b><br>이 점검표는 법정 검사항목이 아니므로 실제 검사 결과는 다를 수 있습니다.</div>';
+  $("summary").innerHTML='<div class="scards">'
+    + '<div class="sc pass"><div class="n">'+t.pass+'</div><div class="l">적합</div></div>'
+    + '<div class="sc fail"><div class="n">'+t.fail+'</div><div class="l">부적합</div></div>'
+    + '<div class="sc check"><div class="n">'+t.check+'</div><div class="l">확인필요</div></div>'
+    + '<div class="sc"><div class="n">'+t.note+'</div><div class="l">기록·해당없음</div></div></div>'+v;
+}
+
+/* ==========================================================
+   시트 4 — 종합 의견
+   ========================================================== */
+function buildOpinion(){
+  const fx=f(), t=tally(), ops=[];
+  if(LASTCALC && LASTCALC.cur===CUR){
+    const d=LASTCALC.dClose;
+    if(d<0) ops.push({p:1, h:"검사기간 경과", li:["검사기간이 "+Math.abs(d)+"일 지났습니다. 정기검사 미이행은 행정처분 대상이므로 관할 행정청에 즉시 문의하십시오.","기산일이 잘못 입력되었을 가능성도 있으니 검사결과서 발급일을 다시 확인하십시오."]});
+    else if(d<=15) ops.push({p:1, h:"검사기간 임박", li:["검사기간 종료까지 "+d+"일 남았습니다. 신청은 검사 희망일 15일 전까지이므로 지금 신청해도 기간 내 검사가 어려울 수 있습니다.","검사기관에 즉시 연락해 일정을 확인하십시오."]});
+    else if(d<=60) ops.push({p:2, h:"검사 준비 시점", li:["검사기간 종료까지 "+d+"일 남았습니다. 지금이 신청과 준비를 시작할 시점입니다.","기준일 45일 전 신청을 권합니다."]});
+    else ops.push({p:3, h:"검사 일정", li:["검사기간까지 여유가 있습니다("+LASTCALC.dOpen+"일). 기준일 45일 전에 신청하실 수 있도록 일정을 등록해 두십시오."]});
+  } else {
+    ops.push({p:2, h:"검사 시기 미확인", li:["검사 기준·시기 시트에서 사용개시일 또는 직전 검사결과서 발급일을 입력해 다음 검사 시기를 먼저 확인하십시오."]});
+  }
+  if(t.fail>0) ops.push({p:1, h:"부적합 "+t.fail+"건", li:t.fails.map(n=>n+" — 검사 전 조치가 필요합니다. 즉시 조치가 어려우면 보완 계획을 세워 검사기관과 미리 협의하십시오.")});
+  const unsetCnt = ITEMS.filter(it=>it.t==="num"&&(!it.op||it.v1==="")).length;
+  if(unsetCnt>0) ops.push({p:2, h:"판정기준 미설정 "+unsetCnt+"건", li:[fx.sheet+" 원문에서 수치 기준을 확인해 “기준값 편집”에 입력하셔야 판정됩니다.","기준을 넣기 전까지 해당 항목은 판정되지 않으므로, 지금 결과만으로 적합 여부를 판단하지 마십시오."]});
+  const blank = t.checks.filter(x=>!x.includes("기준 미설정"));
+  if(blank.length>0) ops.push({p:2, h:"미입력 "+blank.length+"건", li:[blank.slice(0,8).join(" · ")+(blank.length>8?" 외 "+(blank.length-8)+"건":""),"빠진 항목이 실제 검사에서 지적되는 경우가 많습니다."]});
+  if(QLOG.length>0){
+    const recent=[...new Set(QLOG.slice(-8).map(x=>x.q))];
+    ops.push({p:3, h:"조회하신 사항", li:[recent.join(" · "),"관련 조문은 법령 AI 어시스턴트 시트에서 다시 확인하실 수 있습니다."]});
+  }
+  if(t.fail===0 && t.check===0 && unsetCnt===0)
+    ops.push({p:3, h:"점검 완료", li:["입력하신 범위에서 부적합이 없습니다. 다만 이 점검표는 법정 검사항목이 아니므로 "+fx.sheet+" 원문 기준으로 한 번 더 대조하십시오."]});
+  ops.sort((a,b)=>a.p-b.p);
+  return {ops, t, unsetCnt};
+}
+function opinionText(){
+  const fx=f(), {ops,t,unsetCnt}=buildOpinion();
+  let s="[시설] "+fx.name+(SUB?" / "+SUB:"")+"\n";
+  if(VALS.__name) s+="[시설명] "+VALS.__name+"\n";
+  if(VALS.__date) s+="[점검일] "+VALS.__date+"\n";
+  if(LASTCALC&&LASTCALC.cur===CUR) s+="[검사시기] 기준일 "+LASTCALC.std+" / 기간종료 "+LASTCALC.close+" / "+LASTCALC.band+"\n";
+  s+="[점검결과] 총 "+t.total+"건 중 적합 "+t.pass+", 부적합 "+t.fail+", 확인필요 "+t.check+", 기록·해당없음 "+t.note+"\n";
+  if(t.fails.length) s+="[부적합] "+t.fails.join(", ")+"\n";
+  if(t.checks.length) s+="[확인필요] "+t.checks.join(", ")+"\n";
+  if(QLOG.length) s+="[조회사항] "+[...new Set(QLOG.slice(-8).map(x=>x.q))].join(", ")+"\n";
+  return s;
+}
+function renderRev(){
+  const fx=f(), {ops,t}=buildOpinion();
+  $("p-rev").innerHTML =
+   '<div class="card"><h2>종합 의견</h2>'
+   + '<p class="lede">앞 시트에서 확인·점검하신 내용을 모아 정리했습니다. 시트를 오갈 때마다 갱신됩니다.</p>'
+   + '<table><tr><td class="k">시설</td><td>'+esc(fx.name)+(SUB?' · '+esc(SUB):'')+(VALS.__name?' — '+esc(VALS.__name):'')+'</td></tr>'
+   + '<tr><td class="k">점검일</td><td>'+esc(VALS.__date||"미입력")+'</td></tr>'
+   + '<tr><td class="k">검사 시기</td><td>'+(LASTCALC&&LASTCALC.cur===CUR
+        ? '기준일 '+esc(LASTCALC.std)+' · '+esc(LASTCALC.band) : '아직 계산하지 않았습니다')+'</td></tr>'
+   + '<tr><td class="k">점검 결과</td><td>총 '+t.total+'건 — 적합 '+t.pass+' · 부적합 '+t.fail+' · 확인필요 '+t.check+' · 기록·해당없음 '+t.note+'</td></tr>'
+   + '</table>'
+   + ops.map(o=>'<div class="op prio'+o.p+'"><h4>'+esc(o.h)+'</h4><ul>'
+       + o.li.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></div>').join("")
+   + '<div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">'
+   + '<button class="btn ghost sm" id="opCopy">의견 복사</button>'
+   + '<button class="btn ghost sm" id="opPrint">인쇄</button>'
+   + '<button class="btn ghost sm" id="aiToggle">AI 의견 설정</button></div>'
+   + '</div>'
+   + '<div id="aipanel" style="display:none"></div>'
+   + '<div id="aiout"></div>';
+
+  $("opCopy").onclick=()=>{
+    navigator.clipboard.writeText(opinionText()).then(
+      ()=>{ $("opCopy").textContent="복사됨"; setTimeout(()=>$("opCopy").textContent="의견 복사",1600); },
+      ()=>{ $("opCopy").textContent="복사 실패"; setTimeout(()=>$("opCopy").textContent="의견 복사",1600); });
+  };
+  $("opPrint").onclick=()=>window.print();
+  $("aiToggle").onclick=()=>{
+    const p=$("aipanel");
+    p.style.display = p.style.display==="none" ? "block" : "none";
+    if(p.style.display==="block") renderAiPanel();
+  };
+  if(AI.on){ renderAiPanel(); $("aipanel").style.display="block"; }
+}
+function renderAiPanel(){
+  $("aipanel").innerHTML =
+   '<div class="card"><h2>AI 의견 (선택)</h2>'
+   + '<div class="note warn"><b>이 기능은 Anthropic API 키가 있어야 동작하며 사용량에 따라 비용이 발생합니다.</b> '
+   + '키를 입력하면 위 요약 내용이 외부 서버로 전송됩니다. '
+   + '<b>사업장 배포용 파일에는 키를 넣은 채로 배포하지 마십시오.</b> 키 없이도 위 종합 의견은 그대로 사용하실 수 있습니다.</div>'
+   + '<div class="calc"><div><label class="f" for="akey">API 키</label>'
+   + '<input class="f" id="akey" type="password" placeholder="sk-ant-..." value="'+esc(AI.key)+'"></div>'
+   + '<div><label class="f" for="amodel">모델</label><select class="f" id="amodel">'
+   + [["claude-sonnet-5","Sonnet 5 (권장)"],["claude-opus-5","Opus 5"],["claude-haiku-4-5-20251001","Haiku 4.5"]]
+       .map(([v,l])=>'<option value="'+v+'"'+(AI.model===v?' selected':'')+'>'+l+'</option>').join("")
+   + '</select></div></div>'
+   + '<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">'
+   + '<button class="btn" id="aiRun">AI 의견 받기</button>'
+   + '<button class="btn ghost sm" id="aiSave">키 저장</button>'
+   + '<button class="btn ghost sm" id="aiDel">키 삭제</button>'
+   + '<span id="aiMsg" style="display:none;font-size:13px;color:var(--accent)"></span></div></div>';
+  $("aiSave").onclick=()=>{
+    AI.key=$("akey").value.trim(); AI.model=$("amodel").value; AI.on=!!AI.key;
+    try{ if(AI.key) localStorage.setItem(AKEY,AI.key); }catch(e){}
+    const m=$("aiMsg"); m.textContent="저장했습니다."; m.style.display="inline"; setTimeout(()=>m.style.display="none",2000);
+  };
+  $("aiDel").onclick=()=>{
+    AI.key=""; AI.on=false; $("akey").value="";
+    try{ localStorage.removeItem(AKEY); }catch(e){}
+    const m=$("aiMsg"); m.textContent="삭제했습니다."; m.style.display="inline"; setTimeout(()=>m.style.display="none",2000);
+  };
+  $("aiRun").onclick=runAI;
+}
+const AI_SYS = `당신은 폐기물처리시설 검사 준비를 돕는 보조 도구다.
+
+규칙:
+1. 제공된 점검 요약에 실제로 적힌 내용만으로 의견을 쓴다. 법령 수치나 판정기준을 지어내지 않는다.
+2. 판정기준이 설정되지 않은 항목은 "기준 미설정이라 판단할 수 없다"고 명확히 말한다.
+3. 무엇을 먼저 처리해야 하는지 우선순위를 제시한다.
+4. 확정적 표현을 피한다. 최종 판단은 검사기관과 관할 행정청에 있다는 점을 밝힌다.
+5. 5~8문장. 표나 마크다운 강조는 쓰지 않는다.`;
+async function runAI(){
+  const out=$("aiout");
+  if(!AI.key && !$("akey").value.trim()){
+    out.innerHTML='<div class="aibox bad"><h4>안내</h4><div class="bd">API 키를 입력하셔야 AI 의견을 받을 수 있습니다. 키 없이도 위 종합 의견은 그대로 사용하실 수 있습니다.</div></div>';
+    return;
+  }
+  AI.key=$("akey").value.trim()||AI.key; AI.model=$("amodel").value;
+  out.innerHTML='<div class="aibox"><h4>AI 의견</h4><div class="bd"><span class="spin"></span>점검 결과를 검토하는 중입니다…</div></div>';
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","x-api-key":AI.key,
+        "anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+      body:JSON.stringify({model:AI.model,max_tokens:1000,system:AI_SYS,
+        messages:[{role:"user",content:"다음은 사업장이 검사 전에 스스로 점검한 결과입니다. 무엇을 먼저 조치해야 할지 의견을 주십시오.\n\n"+opinionText()}]})
+    });
+    if(!res.ok){
+      let d=""; try{ const j=await res.json(); d=(j.error&&j.error.message)||""; }catch(_){}
+      throw new Error("요청 오류 "+res.status+(d?" — "+d:""));
+    }
+    const data=await res.json();
+    const txt=(data.content||[]).filter(c=>c.type==="text").map(c=>c.text).join("\n");
+    out.innerHTML='<div class="aibox"><h4>AI 의견</h4><div class="bd">'+esc(txt)+'</div>'
+      + '<div class="ft">위 점검 요약만을 근거로 생성된 참고 의견입니다. 최종 판단은 검사기관과 관할 행정청에 따르십시오.</div></div>';
+  }catch(e){
+    out.innerHTML='<div class="aibox bad"><h4>의견을 받지 못했습니다</h4><div class="bd">'+esc(e.message)+'</div>'
+      + '<div class="ft">위 종합 의견은 정상이므로 그대로 사용하실 수 있습니다.</div></div>';
+  }
+}
+
+/* ==========================================================
+   전체
+   ========================================================== */
+function renderAll(){
+  ITEMS=mergeSaved(buildItems(), window.__saved||[]);
+  IDX=null;
+  renderAI(); renderSelf(); renderRev();
+}
+$("fac").onchange=()=>{ CUR=$("fac").value; SUB=""; LASTCALC=null; saveState(); renderAll(); };
+$("nav").querySelectorAll("button").forEach(b=>{
+  b.onclick=()=>{
+    $("nav").querySelectorAll("button").forEach(x=>x.setAttribute("aria-current","false"));
+    b.setAttribute("aria-current","true");
+    document.documentElement.dataset.tone=b.dataset.tone;
+    document.querySelectorAll("section.pane").forEach(s=>s.classList.remove("on"));
+    $("p-"+b.dataset.p).classList.add("on");
+    if(b.dataset.p==="rev") renderRev();
+    window.scrollTo({top:0,behavior:"smooth"});
+  };
+});
+$("print").onclick=()=>window.print();
+document.documentElement.dataset.tone="b";
+
+loadState();
+facOpts();
+$("fac").value=CUR;
+renderAll();
+
+/* 배포판 — 상단 고지 토글 및 오프라인 등록 */
+(function(){
+  var b=document.getElementById("tbMore"), d=document.getElementById("tbDrop");
+  if(b&&d) b.onclick=function(){
+    d.classList.toggle("on");
+    b.textContent = d.classList.contains("on") ? "유의사항 접기 ▴" : "유의사항 자세히 ▾";
+  };
+  if("serviceWorker" in navigator && location.protocol.indexOf("http")===0){
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("sw.js").catch(function(){});
+    });
+  }
+})();
+</script>
