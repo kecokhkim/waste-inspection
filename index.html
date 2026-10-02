@@ -251,7 +251,7 @@
   <div class="topbar-in">
     <span>⚠ <b>이 도구는 AI를 활용해 제작했습니다.</b> 법령 원문을 반드시 함께 확인하십시오.</span>
     <button id="tbMore">유의사항 자세히 ▾</button>
-    <span class="ver">v261002-152126</span>
+    <span class="ver">v261002-154454</span>
   </div>
 </div>
 <div class="topdrop" id="tbDrop">
@@ -562,18 +562,19 @@ const AI={key:"", model:"claude-sonnet-5", on:false};
 const AKEY="wf-inspect-key";
 /* ----------------------------------------------------------
    외부 연동 설정
-   - 법령: 국가법령정보 OPEN API. OC는 등록 도메인(kecokhkim.github.io)에서만 통하는 식별값이라 여기 둡니다.
-           도용이 의심되면 open.law.go.kr 마이페이지에서 바꾸고 이 값도 바꾸십시오.
-   - AI:   OpenRouter. 키는 이 파일에 넣지 않습니다.
-           로컬(python tools/dev_server.py)은 .env 의 키로 중계하고,
-           공개 사이트는 WORKER_URL(중계 서버)이 있으면 그쪽으로, 없으면 이용자가 화면에서 입력한 키(브라우저에만 저장)를 씁니다.
+   - 법령: 국가법령정보 OPEN API. OC는 open.law.go.kr에 등록한 도메인에서만 통하는 식별값이라 여기 둡니다.
+           도용이 의심되면 마이페이지에서 바꾸고 이 값도 바꾸십시오.
+   - AI:   OpenRouter. 키는 이 파일에 넣지 않습니다. 같은 사이트의 /api/chat 이 환경변수의 키로 중계합니다.
+           · Vercel 배포: api/chat.js  (환경변수 OPENROUTER_API_KEY)
+           · 로컬:       python tools/dev_server.py  (.env)
+           · GitHub Pages처럼 서버 함수가 없는 곳: 이용자가 화면에서 입력한 키(브라우저에만 저장)를 씀
    ---------------------------------------------------------- */
 const LAW_OC="kecowi7k3m9";
-const WORKER_URL="";
 const CHAT_MODELS=["nvidia/nemotron-3-ultra-550b-a55b:free","nvidia/nemotron-3-super-120b-a12b:free","google/gemma-4-31b-it:free"];
 const IS_LOCAL=/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
-const PROXY = IS_LOCAL ? "" : WORKER_URL.replace(/\/$/,"");
-const HAS_PROXY = IS_LOCAL || !!WORKER_URL;
+const NO_SERVER=/\.github\.io$/.test(location.hostname) || !/^https?:$/.test(location.protocol);
+const PROXY="";
+const HAS_PROXY=!NO_SERVER;
 const LAW_API = IS_LOCAL ? "/api/law/" : "https://www.law.go.kr/DRF/";
 const ORKEY="wf-openrouter-key";
 
@@ -760,7 +761,7 @@ async function lawGet(params, keep=true){
     return keep ? (LIVE_CACHE[url]=j) : j;
   }catch(e){
     throw new Error(e.name==="AbortError" ? "응답 시간이 초과되었습니다"
-      : e instanceof TypeError ? (IS_LOCAL ? "로컬 중계 서버에 연결하지 못했습니다" : "국가법령정보센터에 연결하지 못했습니다(등록 도메인 kecokhkim.github.io에서만 조회됩니다)")
+      : e instanceof TypeError ? (IS_LOCAL ? "로컬 중계 서버에 연결하지 못했습니다" : "국가법령정보센터에 연결하지 못했습니다(open.law.go.kr에 등록한 도메인에서만 조회됩니다)")
       : (e.message||"조회 실패"));
   }finally{ clearTimeout(tm); }
 }
@@ -1326,7 +1327,7 @@ async function loadLawDbInner(force, progress){
   return (CHAT.db=db);
 }
 
-/* ---- AI 호출: 로컬·Worker는 중계, 그 외에는 이용자가 입력한 키로 OpenRouter 직접 호출 ---- */
+/* ---- AI 호출: 서버 함수(/api/chat)가 있으면 중계, 없으면 이용자가 입력한 키로 OpenRouter 직접 호출 ---- */
 const orKey = ()=>{ try{ return localStorage.getItem(ORKEY)||""; }catch(e){ return ""; } };
 async function chatComplete(messages){
   if(HAS_PROXY){

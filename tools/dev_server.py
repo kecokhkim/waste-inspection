@@ -3,7 +3,7 @@
 사용법:  python tools/dev_server.py   →  http://localhost:8000
   GET  /api/law/<lawService.do|lawSearch.do>?...  →  국가법령정보 OPEN API (OC는 서버가 붙임)
   POST /api/chat  {messages:[...], max_tokens}     →  OpenRouter (키·모델은 서버가 붙임)
-키는 .env 에서만 읽고 브라우저로 내보내지 않는다. 공개 배포 시에는 같은 역할을 Cloudflare Worker가 맡는다.
+키는 .env 에서만 읽고 브라우저로 내보내지 않는다. Vercel 배포에서는 api/chat.js 가 같은 역할을 맡는다.
 """
 import json
 import os

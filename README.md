@@ -19,7 +19,7 @@
 내용을 고칠 때는 `sw.js` 첫 줄의 `VERSION` 값도 함께 바꾸십시오. 그래야 이용자에게 새 판이 내려갑니다.
 
 ```js
-const VERSION = "v261002-152126";   // ← 이 값을 새 날짜로 변경
+const VERSION = "v261002-154454";   // ← 이 값을 새 날짜로 변경
 ```
 
 `index.html` 상단 바에 표시되는 버전 문자열도 같이 맞춰두면 이용자가 어느 판을 보고 있는지 확인할 수 있습니다.
@@ -37,7 +37,14 @@ const VERSION = "v261002-152126";   // ← 이 값을 새 날짜로 변경
 
 - **현행 원문 조회**: 조문마다 국가법령정보 OPEN API로 최신 조문을 불러옵니다. 인증키(OC)는 등록 도메인(`kecokhkim.github.io`)에서만 통하므로 `index.html`의 `LAW_OC`에 둡니다.
 - **법령 AI 챗봇 탭**: 첫 접속 시 브라우저가 법령 API에서 폐기물관리법·시행령·시행규칙과 「폐기물처리시설의 검사방법에 관한 규정」 전체 조문·별표를 받아 DB를 구성하고(하루 보관), 질문과 관련된 조문을 찾아 AI에 함께 보냅니다. 답변의 [번호]를 누르면 근거 조문과 현행 원문 조회가 열립니다.
-- **AI 키는 저장소에 넣지 않습니다.** 공개 사이트에서는 이용자가 화면의 “AI 키 설정”에 OpenRouter 키를 입력합니다(그 브라우저에만 저장). 중계 서버(Cloudflare Worker 등)를 두면 `WORKER_URL`에 주소를 넣어 키 입력 없이 쓸 수 있습니다.
+- **AI 키는 저장소에 넣지 않습니다.** Vercel 서버 함수 [`api/chat.js`](api/chat.js)가 환경변수 `OPENROUTER_API_KEY`로 OpenRouter에 중계합니다. 서버 함수가 없는 GitHub Pages에서는 이용자가 화면의 “AI 키 설정”에 키를 입력해야 합니다.
+
+### Vercel 배포
+
+1. vercel.com → Add New → Project → 이 GitHub 저장소 Import (Framework: Other, 빌드 설정 없음)
+2. Settings → Environment Variables 에 `OPENROUTER_API_KEY` 추가 후 Redeploy
+3. open.law.go.kr 마이페이지 → API인증키관리 에 Vercel 도메인(예: `waste-inspection.vercel.app`) 추가 — 법령 실시간 조회·DB 구성에 필요
+4. 이후 `main`에 push하면 자동 배포됩니다.
 - 사용 모델은 `index.html`의 `CHAT_MODELS` 순서대로 시도합니다(무료 모델, 키당 하루 50회).
 
 ### 로컬 테스트
