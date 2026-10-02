@@ -19,7 +19,7 @@
 내용을 고칠 때는 `sw.js` 첫 줄의 `VERSION` 값도 함께 바꾸십시오. 그래야 이용자에게 새 판이 내려갑니다.
 
 ```js
-const VERSION = "v260821-061440";   // ← 이 값을 새 날짜로 변경
+const VERSION = "v261002-152126";   // ← 이 값을 새 날짜로 변경
 ```
 
 `index.html` 상단 바에 표시되는 버전 문자열도 같이 맞춰두면 이용자가 어느 판을 보고 있는지 확인할 수 있습니다.
@@ -32,6 +32,22 @@ const VERSION = "v260821-061440";   // ← 이 값을 새 날짜로 변경
 | `manifest.webmanifest` | 홈 화면 추가(앱처럼 실행)용 설정 |
 | `sw.js` | 오프라인 지원. 한 번 접속하면 이후 인터넷 없이도 열립니다 |
 | `icon-192.png` / `icon-512.png` / `apple-touch-icon.png` | 앱 아이콘 |
+
+## 법령 실시간 연동 · 법령 AI 챗봇 (시범)
+
+- **현행 원문 조회**: 조문마다 국가법령정보 OPEN API로 최신 조문을 불러옵니다. 인증키(OC)는 등록 도메인(`kecokhkim.github.io`)에서만 통하므로 `index.html`의 `LAW_OC`에 둡니다.
+- **법령 AI 챗봇 탭**: 첫 접속 시 브라우저가 법령 API에서 폐기물관리법·시행령·시행규칙과 「폐기물처리시설의 검사방법에 관한 규정」 전체 조문·별표를 받아 DB를 구성하고(하루 보관), 질문과 관련된 조문을 찾아 AI에 함께 보냅니다. 답변의 [번호]를 누르면 근거 조문과 현행 원문 조회가 열립니다.
+- **AI 키는 저장소에 넣지 않습니다.** 공개 사이트에서는 이용자가 화면의 “AI 키 설정”에 OpenRouter 키를 입력합니다(그 브라우저에만 저장). 중계 서버(Cloudflare Worker 등)를 두면 `WORKER_URL`에 주소를 넣어 키 입력 없이 쓸 수 있습니다.
+- 사용 모델은 `index.html`의 `CHAT_MODELS` 순서대로 시도합니다(무료 모델, 키당 하루 50회).
+
+### 로컬 테스트
+
+```
+copy .env.example .env      # 값 채우기 (.env 는 git에 올라가지 않음)
+python tools/dev_server.py  # http://localhost:8000 — .env 의 키로 AI·법령 API 중계
+```
+
+로컬에서 법령 API를 쓰려면 이 PC의 공인 IP를 open.law.go.kr 마이페이지에 등록해야 합니다. `python tools/build_law_db.py`로 `data/laws.json`을 미리 만들어 두면 API를 못 쓸 때 대신 사용합니다.
 
 ## 배포 전 확인사항
 

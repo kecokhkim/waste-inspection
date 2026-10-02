@@ -118,6 +118,49 @@
   .tag.kind{background:var(--accent-soft);color:var(--accent-dk)}
   .cpy{appearance:none;border:0;background:none;color:var(--ink3);cursor:pointer;font:inherit;font-size:12.5px;margin-left:auto}
   .cpy:hover{color:var(--accent);text-decoration:underline}
+  .live{appearance:none;border:1px solid var(--accent-ln);background:var(--accent-soft);color:var(--accent-dk);cursor:pointer;font:inherit;font-size:12.5px;padding:2px 9px;border-radius:4px}
+  .live:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .liveout:empty{display:none}
+  .liveout{margin-top:10px}
+  .livebox{border-left:3px solid var(--accent);background:var(--accent-soft);padding:11px 13px;border-radius:0 6px 6px 0;font-size:13.5px}
+  .livebox h4{margin:0 0 7px;font-size:13px;color:var(--accent-dk)}
+  .livebox h4 span{font-weight:400;color:var(--ink3);margin-left:6px}
+  .livebox .bd{white-space:pre-wrap;line-height:1.75}
+  .livebox .ft{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:9px}
+  .livebox .ft a{margin-left:auto;font-size:12.5px;color:var(--accent)}
+  .livebox .ft2{margin-top:7px;font-size:12px;color:var(--ink3)}
+
+  /* 법령 AI 챗봇 */
+  .chatlog{margin-top:14px;display:flex;flex-direction:column;gap:12px}
+  .msg{max-width:100%}
+  .msg.u{align-self:flex-end;background:var(--accent);color:#fff;border-radius:12px 12px 2px 12px;padding:9px 14px;font-size:14.5px;max-width:82%;white-space:pre-wrap}
+  .msg.a{background:var(--card);border:1px solid var(--line);border-radius:2px 12px 12px 12px;padding:14px 16px}
+  .msg.a .bd{font-size:14.5px;line-height:1.8;white-space:pre-wrap}
+  .msg.a.bad{border-color:#E6CDBB;background:var(--ember-soft);color:var(--ember)}
+  .msg .meta{margin-top:10px;font-size:11.5px;color:var(--ink3);font-family:var(--mono)}
+  .cite{appearance:none;border:0;background:var(--accent-soft);color:var(--accent-dk);font:inherit;font-size:11px;font-weight:700;
+    font-family:var(--mono);border-radius:3px;padding:0 5px;margin:0 1px;cursor:pointer;vertical-align:1px}
+  .cite:hover{background:var(--accent);color:#fff}
+  .cite.bad{background:var(--line2);color:var(--ink3);cursor:default;text-decoration:line-through}
+  .srcs{margin-top:12px;border-top:1px solid var(--line2);padding-top:10px}
+  .srcs > .h{font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:6px}
+  .srcs details{border:1px solid var(--line2);border-radius:6px;margin-top:6px;background:#FCFCFA}
+  .srcs details.hit{border-color:var(--accent-ln)}
+  .srcs details.flash{box-shadow:0 0 0 2px var(--accent)}
+  .srcs summary{cursor:pointer;padding:7px 10px;font-size:13px;list-style:none;display:flex;gap:7px;align-items:baseline;flex-wrap:wrap}
+  .srcs summary::-webkit-details-marker{display:none}
+  .srcs summary .n{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent-dk);background:var(--accent-soft);border-radius:3px;padding:0 5px}
+  .srcs summary .c{font-weight:600}
+  .srcs summary .t{color:var(--ink3);font-size:12px}
+  .srcs .sb{padding:0 12px 11px}
+  .srcs .sb pre{white-space:pre-wrap;font-family:var(--sans);font-size:13px;line-height:1.7;margin:0;max-height:340px;overflow:auto}
+  .srcs .sb .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}
+  .srcs .more{appearance:none;border:0;background:none;color:var(--ink3);font:inherit;font-size:12px;cursor:pointer;padding:4px 0;text-decoration:underline}
+  .chatin{position:sticky;bottom:0;background:var(--paper);padding:12px 0 6px;margin-top:14px}
+  .chatin .qrow textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:6px;padding:10px 12px;font:inherit;font-size:15px;min-height:46px;max-height:160px;background:#fff}
+  .chatin .qrow textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
+  .chatbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--ink3);margin-top:6px}
+  .chatbar button{appearance:none;border:0;background:none;color:var(--ink3);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;padding:0}
   .empty{text-align:center;padding:36px 20px;color:var(--ink3);font-size:14px}
   .empty b{display:block;color:var(--ink2);font-size:15px;margin-bottom:5px;font-weight:600}
 
@@ -208,7 +251,7 @@
   <div class="topbar-in">
     <span>⚠ <b>이 도구는 AI를 활용해 제작했습니다.</b> 법령 원문을 반드시 함께 확인하십시오.</span>
     <button id="tbMore">유의사항 자세히 ▾</button>
-    <span class="ver">v260821-061440</span>
+    <span class="ver">v261002-152126</span>
   </div>
 </div>
 <div class="topdrop" id="tbDrop">
@@ -222,7 +265,7 @@
     </ul>
     <h5>개인정보 처리</h5>
     입력하신 날짜·점검값은 이 기기의 브라우저에만 저장되며 어떤 서버로도 전송되지 않습니다.
-    종합 의견 시트에서 AI 의견을 요청하는 경우에만 요약 내용이 외부로 전송됩니다.
+    종합 의견 시트에서 AI 의견을 요청하는 경우와 법령 AI 챗봇에 질문하는 경우에만 해당 내용이 외부 AI 서비스로 전송됩니다.
   </div>
 </div>
 <header>
@@ -236,6 +279,7 @@
     </div>
     <nav id="nav">
       <button data-p="ai" data-tone="b" aria-current="true">법령 AI 어시스턴트</button>
+      <button data-p="chat" data-tone="b">법령 AI 챗봇 <small style="font-size:10px;color:var(--ember)">시범</small></button>
       <button data-p="self" data-tone="c">사전 모의점검</button>
       <button data-p="rev" data-tone="d">종합 의견</button>
     </nav>
@@ -244,11 +288,12 @@
 
 <div class="wrap">
   <section class="pane on" id="p-ai"></section>
+  <section class="pane" id="p-chat"></section>
   <section class="pane" id="p-self"></section>
   <section class="pane" id="p-rev"></section>
   <footer>
     이 자료는 안내용입니다. 법령은 수시로 개정되므로 신청·이행 전 국가법령정보센터(law.go.kr)의 시행 중인 원문과 관할 검사기관 안내를 확인하십시오.<br>
-    올리신 정보는 이 컴퓨터를 벗어나지 않습니다. 다만 종합 의견 시트에서 AI 의견을 요청하면 요약 내용이 외부로 전송됩니다.
+    올리신 정보는 이 컴퓨터를 벗어나지 않습니다. 다만 종합 의견 시트에서 AI 의견을 요청하거나 법령 AI 챗봇에 질문하면 해당 내용이 외부 AI 서비스로 전송됩니다.
   </footer>
 </div>
 <button class="btn ghost sm prt" id="print">인쇄</button>
@@ -465,43 +510,43 @@ const COMMON_FAQ = [
 ];
 
 const LAWS = [
-{ttl:"폐기물처리시설의 검사 — 설치검사", cite:"폐기물관리법 제30조제1항", dt:"", chk:true, fac:[],
+{ttl:"폐기물처리시설의 검사 — 설치검사", cite:"폐기물관리법 제30조제1항", api:{t:"law",id:"001771",jo:30,h:1}, dt:"", chk:true, fac:[],
  txt:"폐기물처리시설을 설치한 자는 환경부령으로 정하는 검사기관으로부터 검사를 받아야 하며, 검사 결과 적합판정을 받지 아니한 폐기물처리시설을 사용해서는 아니 된다."},
-{ttl:"폐기물처리시설의 검사 — 정기검사 및 기술진단 갈음", cite:"폐기물관리법 제30조제2항", dt:"", chk:false, fac:[],
+{ttl:"폐기물처리시설의 검사 — 정기검사 및 기술진단 갈음", cite:"폐기물관리법 제30조제2항", api:{t:"law",id:"001771",jo:30,h:2}, dt:"", chk:false, fac:[],
  txt:"폐기물처리시설을 설치·운영하는 자는 시행규칙 제41조제5항에서 정하는 기간마다 검사기관으로부터 정기검사를 받아야 한다. 이 경우 검사기간 내에 「환경기술 및 환경산업 지원법」 제13조에 따라 같은 시설에 대한 기술진단(같은 법 제13조제3항에 따른 요청을 이행하지 아니한 경우는 제외한다)을 받으면 정기검사를 받은 것으로 본다."},
-{ttl:"사용개시 신고 — 사용개시일 10일 전까지", cite:"폐기물관리법 시행규칙 제41조제1항", dt:"2022-11-29", chk:false, fac:[],
+{ttl:"사용개시 신고 — 사용개시일 10일 전까지", cite:"폐기물관리법 시행규칙 제41조제1항", api:{t:"law",id:"008567",jo:41,h:1}, dt:"2022-11-29", chk:false, fac:[],
  txt:"법 제29조제4항에 따라 폐기물처리시설의 설치자는 해당 시설의 사용개시일 10일 전까지 별지 제27호서식이나 별지 제28호서식의 사용개시신고서에 관련 서류를 첨부하여 시·도지사나 지방환경관서의 장에게 제출해야 한다."},
-{ttl:"검사 신청 — 검사일 15일 전까지", cite:"폐기물관리법 시행규칙 제41조제7항", dt:"2024-02-06", chk:false, fac:[],
+{ttl:"검사 신청 — 검사일 15일 전까지", cite:"폐기물관리법 시행규칙 제41조제7항", api:{t:"law",id:"008567",jo:41,h:7}, dt:"2024-02-06", chk:false, fac:[],
  txt:"법 제30조제1항 및 제2항에 따른 검사를 받으려는 자는 검사를 받으려는 날 15일 전까지 별지 제29호서식 또는 별지 제30호서식의 검사신청서에 관련 서류를 첨부하여 폐기물처리시설 검사기관에 제출해야 한다."},
-{ttl:"검사기준의 위임", cite:"폐기물관리법 시행규칙 제41조제6항", dt:"2024-02-06", chk:false, fac:[],
+{ttl:"검사기준의 위임", cite:"폐기물관리법 시행규칙 제41조제6항", api:{t:"law",id:"008567",jo:41,h:6}, dt:"2024-02-06", chk:false, fac:[],
  txt:"법 제30조에 따른 검사를 위한 검사기준은 별표 10과 같다."},
-{ttl:"변경 시 재검사 대상", cite:"폐기물관리법 시행규칙 제41조제4항", dt:"2024-02-06", chk:true, fac:[],
+{ttl:"변경 시 재검사 대상", cite:"폐기물관리법 시행규칙 제41조제4항", api:{t:"law",id:"008567",jo:41,h:4}, dt:"2024-02-06", chk:true, fac:[],
  txt:"법 제30조제1항 후단에서 “환경부령으로 정하는 경우”란 다음 각 호의 경우를 말한다.\n1. 제39조제3항제2호 및 제4호부터 제6호까지의 규정 중 어느 하나에 해당하여 변경승인을 받은 경우\n2. 제40조제3항제3호부터 제5호까지의 규정 중 어느 하나에 해당하여 변경신고를 한 경우"},
-{ttl:"설치검사·정기검사의 정의", cite:"세부 검사방법에 관한 규정 제2조제1호·제2호", dt:"", chk:false, fac:[],
+{ttl:"설치검사·정기검사의 정의", cite:"세부 검사방법에 관한 규정 제2조제1호·제2호", api:{t:"admrul",jo:2}, dt:"", chk:false, fac:[],
  txt:"1. “설치검사”란 폐기물처리시설의 설치자가 제3조의 검사기준 및 방법에 따라 해당 시설의 형식·기능 등이 설치기준에 적합한지 여부에 대하여 받는 검사로서 법 제30조제1항에 따른 검사를 말한다.\n2. “정기검사”란 폐기물처리시설이 설치기준 및 관리기준에 적합하게 유지·관리되고 있는지를 확인하기 위하여 법 제30조제2항에 따라 정기적으로 받는 검사를 말한다."},
 {ttl:"설치기준 / 관리기준", cite:"폐기물관리법 시행규칙 별표 9 / 별표 8", dt:"", chk:true, fac:[],
  txt:"[요약] 폐기물처리시설은 시행규칙 별표 9의 설치기준에 맞게 설치하여야 하며, 별표 8의 관리기준에 따라 운영·관리하여야 한다.\n※ 시설별 구체 항목은 별표 원문을 확인하십시오. 요약 인용은 하지 마십시오."},
-{ttl:"검사 미이행·부적합 시설 사용에 대한 행정처분", cite:"폐기물관리법 제27조제2항제11호", dt:"", chk:false, fac:[],
+{ttl:"검사 미이행·부적합 시설 사용에 대한 행정처분", cite:"폐기물관리법 제27조제2항제11호", api:{t:"law",id:"001771",jo:27,h:2,ho:11}, dt:"", chk:false, fac:[],
  txt:"「폐기물관리법」 제30조제1항·제2항을 위반하여 검사를 받지 아니하거나 적합판정을 받지 않은 폐기물처리시설을 사용한 경우에는 「폐기물관리법」 제27조제2항제11호, 같은 법 시행령 별표 6, 같은 법 시행규칙 제83조제1항 및 별표 21에 따른 행정처분을 받는다."},
 {ttl:"세부검사방법 별표 구성", cite:"폐기물처리시설의 검사방법에 관한 규정", dt:"2023-05-10", chk:false, fac:[],
  txt:"시설별 세부검사방법은 다음 별표에서 정한다.\n별표 1 폐기물 소각시설 / 별표 2 폐기물 매립시설 / 별표 3 멸균분쇄시설 / 별표 4 음식물류폐기물처리시설 / 별표 5 시멘트 소성로 / 별표 6 소각열회수시설 / 별표 7 열분해시설\n※ 각 별표는 첨부파일 형태로 제공됩니다. 국가법령정보센터에서 원문을 확인하십시오."},
-{ttl:"정기검사 시기 — 소각·소각열회수·열분해시설", cite:"폐기물관리법 시행규칙 제41조제5항제1호", dt:"2024-02-06", chk:false, fac:["incin","heat","pyro"],
+{ttl:"정기검사 시기 — 소각·소각열회수·열분해시설", cite:"폐기물관리법 시행규칙 제41조제5항제1호", api:{t:"law",id:"008567",jo:41,h:5,ho:1}, dt:"2024-02-06", chk:false, fac:["incin","heat","pyro"],
  txt:"법 제30조제2항에서 “환경부령으로 정하는 기간”이란 다음 각 호의 기준일 전후 각각 30일 이내의 기간을 말한다.\n1. 소각시설, 소각열회수시설 및 열분해시설: 최초 정기검사는 사용개시일부터 3년이 되는 날(「대기환경보전법」 제32조에 따른 측정기기를 설치하고 같은 법 시행령 제19조제1항제1호의 굴뚝원격감시체계관제센터와 연결하여 정상적으로 운영되는 경우에는 사용개시일부터 5년이 되는 날), 2회 이후의 정기검사는 최종 정기검사일부터 3년이 되는 날"},
-{ttl:"정기검사 시기 — 매립시설", cite:"폐기물관리법 시행규칙 제41조제5항제2호", dt:"2024-02-06", chk:false, fac:["landfill"],
+{ttl:"정기검사 시기 — 매립시설", cite:"폐기물관리법 시행규칙 제41조제5항제2호", api:{t:"law",id:"008567",jo:41,h:5,ho:2}, dt:"2024-02-06", chk:false, fac:["landfill"],
  txt:"2. 매립시설: 최초 정기검사는 사용개시일부터 1년이 되는 날, 2회 이후의 정기검사는 최종 정기검사일부터 3년이 되는 날"},
-{ttl:"정기검사 시기 — 멸균분쇄시설", cite:"폐기물관리법 시행규칙 제41조제5항제3호", dt:"2024-02-06", chk:false, fac:["sterile"],
+{ttl:"정기검사 시기 — 멸균분쇄시설", cite:"폐기물관리법 시행규칙 제41조제5항제3호", api:{t:"law",id:"008567",jo:41,h:5,ho:3}, dt:"2024-02-06", chk:false, fac:["sterile"],
  txt:"3. 멸균분쇄시설: 최초 정기검사는 사용개시일부터 3개월, 2회 이후의 정기검사는 최종 정기검사일부터 3개월\n※ 제41조제5항 본문 단서에 따라 멸균분쇄시설은 “기준일 전후 각각 30일” 규정이 아니라 제3호의 기간을 적용합니다."},
-{ttl:"정기검사 시기 — 음식물류 폐기물 처리시설", cite:"폐기물관리법 시행규칙 제41조제5항제4호", dt:"2024-02-06", chk:false, fac:["food"],
+{ttl:"정기검사 시기 — 음식물류 폐기물 처리시설", cite:"폐기물관리법 시행규칙 제41조제5항제4호", api:{t:"law",id:"008567",jo:41,h:5,ho:4}, dt:"2024-02-06", chk:false, fac:["food"],
  txt:"4. 음식물류 폐기물 처리시설: 최초 정기검사는 사용개시일부터 1년이 되는 날, 2회 이후의 정기검사는 최종 정기검사일부터 1년이 되는 날"},
-{ttl:"정기검사 시기 — 시멘트 소성로", cite:"폐기물관리법 시행규칙 제41조제5항제5호", dt:"2024-02-06", chk:false, fac:["cement"],
+{ttl:"정기검사 시기 — 시멘트 소성로", cite:"폐기물관리법 시행규칙 제41조제5항제5호", api:{t:"law",id:"008567",jo:41,h:5,ho:5}, dt:"2024-02-06", chk:false, fac:["cement"],
  txt:"5. 시멘트 소성로: 최초 정기검사는 사용개시일부터 3년이 되는 날(측정기기를 설치하고 굴뚝원격감시체계관제센터와 연결하여 정상적으로 운영되는 경우에는 사용개시일부터 5년이 되는 날), 2회 이후의 정기검사는 최종 정기검사일부터 3년이 되는 날"},
-{ttl:"검사 대상 — 음식물류 폐기물 처리시설", cite:"폐기물관리법 시행규칙 제41조제2항제4호", dt:"2024-02-06", chk:false, fac:["food"],
+{ttl:"검사 대상 — 음식물류 폐기물 처리시설", cite:"폐기물관리법 시행규칙 제41조제2항제4호", api:{t:"law",id:"008567",jo:41,h:2,ho:4}, dt:"2024-02-06", chk:false, fac:["food"],
  txt:"음식물류 폐기물 처리시설(음식물류 폐기물에 대한 중간처리 후 새로 발생한 폐기물을 처리하는 시설을 포함한다)\n※ 음식물류 폐기물을 처리하는 시설로서 1일 처리능력 100킬로그램 이상인 시설을 “음식물류 폐기물 처리시설”이라 한다."},
-{ttl:"음식물류폐기물처리시설의 처리방식 정의", cite:"세부 검사방법에 관한 규정 제2조제8호", dt:"", chk:false, fac:["food"],
+{ttl:"음식물류폐기물처리시설의 처리방식 정의", cite:"세부 검사방법에 관한 규정 제2조제8호", api:{t:"admrul",jo:2}, dt:"", chk:false, fac:["food"],
  txt:"다만, 1일 처리능력 100킬로그램 미만인 시설은 검사대상시설에서 제외한다.\n가. “퇴비화”란 비료관리법 제4조에 따라 공정규격이 설정된 비료 또는 지정된 부산물비료를 제조하는 데 적합한 시설을 갖추고 퇴비를 생산하는 일련의 공정을 말한다.\n나. “사료화”란 사료관리법 제8조제2항에 따른 기준에 적합한 시설을 갖추고 사료를 생산하는 일련의 공정을 말한다.\n다. “감량화”란 발효, 소멸, 건조 등 방법으로 감량하는 일련의 공정을 말한다.\n라. “혐기성분해”란 액상 및 가스상 물질로 변환시키는 일련의 공정을 말한다.\n마. “부숙토생산”, 바. “지렁이분변토생산”, 사. “기타시설”"},
-{ttl:"시간당 25킬로그램 미만 소각시설 설치·운영 금지", cite:"폐기물관리법 시행규칙 제36조", dt:"", chk:true, fac:["incin","heat"],
+{ttl:"시간당 25킬로그램 미만 소각시설 설치·운영 금지", cite:"폐기물관리법 시행규칙 제36조", api:{t:"law",id:"008567",jo:36}, dt:"", chk:true, fac:["incin","heat"],
  txt:"폐기물처리시설은 별표 9의 설치기준에 맞게 설치하되, 시간당 폐기물 소각능력이 25킬로그램 미만인 폐기물 소각시설을 설치·운영해서는 안 된다."},
-{ttl:"주변지역 영향조사 — 3년마다", cite:"폐기물관리법 제31조제3항", dt:"", chk:false, fac:["incin","landfill"],
+{ttl:"주변지역 영향조사 — 3년마다", cite:"폐기물관리법 제31조제3항", api:{t:"law",id:"001771",jo:31,h:3}, dt:"", chk:false, fac:["incin","landfill"],
  txt:"다음 중 어느 하나에 해당하는 폐기물처리시설을 설치·운영하는 자는 그 시설의 설치·운영이 주변 지역에 미치는 영향을 3년마다 조사하고 그 결과를 제출해야 한다.\n1. 1일 처분능력이 50톤 이상인 사업장폐기물 소각시설\n2. 매립면적 1만 제곱미터 이상의 사업장 지정폐기물 매립시설\n3. 매립면적 15만 제곱미터 이상의 사업장 일반폐기물 매립시설"},
 {ttl:"법령해석 — 기한 내 신청과 결과서 발급의 관계", cite:"법제처 법령해석 (정기검사)", dt:"", chk:true, fac:["food"],
  txt:"폐기물처리시설의 운영자가 검사주기 내에 검사를 받지 않았거나 검사결과서를 발급받지 않았다고 하더라도, 검사주기 내에 정기검사를 받겠다고 희망하는 검사신청서를 검사희망일의 15일 전까지 제출하였다면 법 제30조제2항에 따른 정기검사 규정을 준수한 것으로 보아야 한다는 취지의 해석이 있었다.\n※ 환경부는 검사결과서 발급까지 필요하다는 입장이었습니다. 개별 사안은 관할 행정청 회신에 따르십시오."}
@@ -515,6 +560,22 @@ let QLOG=[], LASTCALC=null;
 const SKEY="wf-inspect-v2";
 const AI={key:"", model:"claude-sonnet-5", on:false};
 const AKEY="wf-inspect-key";
+/* ----------------------------------------------------------
+   외부 연동 설정
+   - 법령: 국가법령정보 OPEN API. OC는 등록 도메인(kecokhkim.github.io)에서만 통하는 식별값이라 여기 둡니다.
+           도용이 의심되면 open.law.go.kr 마이페이지에서 바꾸고 이 값도 바꾸십시오.
+   - AI:   OpenRouter. 키는 이 파일에 넣지 않습니다.
+           로컬(python tools/dev_server.py)은 .env 의 키로 중계하고,
+           공개 사이트는 WORKER_URL(중계 서버)이 있으면 그쪽으로, 없으면 이용자가 화면에서 입력한 키(브라우저에만 저장)를 씁니다.
+   ---------------------------------------------------------- */
+const LAW_OC="kecowi7k3m9";
+const WORKER_URL="";
+const CHAT_MODELS=["nvidia/nemotron-3-ultra-550b-a55b:free","nvidia/nemotron-3-super-120b-a12b:free","google/gemma-4-31b-it:free"];
+const IS_LOCAL=/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+const PROXY = IS_LOCAL ? "" : WORKER_URL.replace(/\/$/,"");
+const HAS_PROXY = IS_LOCAL || !!WORKER_URL;
+const LAW_API = IS_LOCAL ? "/api/law/" : "https://www.law.go.kr/DRF/";
+const ORKEY="wf-openrouter-key";
 
 const f = ()=>FAC[CUR];
 function facOpts(){ $("fac").innerHTML = Object.entries(FAC).map(([k,v])=>'<option value="'+k+'">'+esc(v.name)+'</option>').join(""); }
@@ -572,7 +633,7 @@ function pool(){
   ].concat((fx.notes||[]).map(([t,b])=>({kind:"안내", ttl:t, cite:fx.name,
      txt:b.replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim()})));
   const laws = LAWS.filter(L=>!L.fac.length||L.fac.includes(CUR))
-    .map(L=>({kind:"조문", ttl:L.ttl, cite:L.cite, txt:L.txt, dt:L.dt, chk:L.chk}));
+    .map(L=>({kind:"조문", ttl:L.ttl, cite:L.cite, txt:L.txt, dt:L.dt, chk:L.chk, api:L.api}));
   const faqs = COMMON_FAQ.concat(f().faq||[])
     .map(([q,a])=>({kind:"문답", ttl:q, cite:"안내", txt:a.replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim(), html:a}));
   return guide.concat(laws, faqs);
@@ -640,7 +701,7 @@ function renderAI(){
    + '</div>'
    + '<div class="oneline"><b>검사 대상</b> — '+fx.target+'<span class="src">'+esc(fx.targetSrc)+'</span></div>'
    + '<div class="card"><h2>법령 AI 어시스턴트</h2>'
-   + '<p class="lede">'+esc(fx.name)+' 기준으로 답합니다. 안내·조문·문답을 함께 찾습니다. 인터넷 없이 동작합니다.</p>'
+   + '<p class="lede">'+esc(fx.name)+' 기준으로 답합니다. 안내·조문·문답을 함께 찾습니다. 인터넷 없이 동작하며, 연결되어 있으면 조문별 “현행 원문 조회”로 국가법령정보센터의 최신 조문을 확인할 수 있습니다.</p>'
    + '<div class="qrow"><input id="q" type="text" placeholder="정기검사는 언제까지 신청해야 하나요?" autocomplete="off">'
    + '<button class="btn" id="go">찾기</button></div>'
    + '<div class="chips" id="chips"></div></div>'
@@ -665,8 +726,9 @@ function renderAns(list, query){
       + '<span class="tag kind">'+esc(L.kind)+'</span>'
       + (L.dt?'<span class="tag dt">시행 '+esc(L.dt)+'</span>':'')
       + (L.chk?'<span class="tag chk2">원문확인 필요</span>':'')
+      + (L.api?'<button class="live" data-i="'+x.i+'">현행 원문 조회</button>':'')
       + (L.kind==="조문"?'<button class="cpy" data-c="'+esc(L.cite)+'">인용문 복사</button>':'')
-      + '</div></div></details>';
+      + '</div>'+(L.api?'<div class="liveout" id="live'+x.i+'"></div>':'')+'</div></details>';
   }).join("") : '<div class="empty"><b>일치하는 내용이 없습니다.</b>다른 표현으로 물어보시거나 국가법령정보센터에서 확인하십시오.</div>';
   $("ans").querySelectorAll(".cpy").forEach(b=>b.onclick=e=>{
     e.preventDefault();
@@ -675,6 +737,91 @@ function renderAns(list, query){
       ()=>{ b.textContent="복사됨"; setTimeout(()=>b.textContent="인용문 복사",1600); },
       ()=>{ b.textContent="복사 실패"; setTimeout(()=>b.textContent="인용문 복사",1600); });
   });
+  $("ans").querySelectorAll(".live").forEach(b=>b.onclick=e=>{ e.preventDefault(); showLive(P[+b.dataset.i], $("live"+b.dataset.i), b); });
+}
+
+/* ----------------------------------------------------------
+   국가법령정보 OPEN API — 현행 원문 실시간 조회
+   실패하면 위 수록본만 보이고 기능은 그대로 동작합니다.
+   ---------------------------------------------------------- */
+const LIVE_CACHE={};
+const arr = v => v==null ? [] : (Array.isArray(v) ? v : [v]);
+const ymd = s => s&&s.length===8 ? s.slice(0,4)+"-"+s.slice(4,6)+"-"+s.slice(6) : (s||"");
+async function lawGet(params, keep=true){
+  const url=LAW_API+(params.svc||"lawService.do")+"?type=JSON&"+(IS_LOCAL?"":"OC="+encodeURIComponent(LAW_OC)+"&")+params.q;
+  if(LIVE_CACHE[url]) return LIVE_CACHE[url];
+  const ctl=new AbortController(), tm=setTimeout(()=>ctl.abort(),15000);
+  try{
+    const res=await fetch(url,{signal:ctl.signal});
+    const j=await res.json().catch(()=>({}));
+    if(!res.ok) throw new Error(j.error||("응답 오류 "+res.status));
+    if(j.Law && typeof j.Law==="string") throw new Error(j.Law);
+    if(j.result && j.msg) throw new Error(j.msg);
+    return keep ? (LIVE_CACHE[url]=j) : j;
+  }catch(e){
+    throw new Error(e.name==="AbortError" ? "응답 시간이 초과되었습니다"
+      : e instanceof TypeError ? (IS_LOCAL ? "로컬 중계 서버에 연결하지 못했습니다" : "국가법령정보센터에 연결하지 못했습니다(등록 도메인 kecokhkim.github.io에서만 조회됩니다)")
+      : (e.message||"조회 실패"));
+  }finally{ clearTimeout(tm); }
+}
+async function liveLaw(a){
+  const g=a.gaji||0;
+  const j=await lawGet({q:"target=law&ID="+a.id+"&JO="+String(a.jo).padStart(4,"0")+String(g).padStart(2,"0")});
+  const info=(j.법령||{}).기본정보||{};
+  const unit=arr(((j.법령||{}).조문||{}).조문단위).find(u=>u.조문여부==="조문" && +u.조문번호===a.jo && +(u.조문가지번호||0)===g);
+  if(!unit) throw new Error("해당 조문을 찾지 못했습니다");
+  let lines=[];
+  const hangs=arr(unit.항);
+  if(!hangs.length) lines.push(unit.조문내용);
+  else{
+    const pick = a.h ? [hangs[a.h-1]].filter(Boolean) : hangs;
+    if(!pick.length) throw new Error("해당 항을 찾지 못했습니다");
+    if(!a.h) lines.push(unit.조문내용);
+    pick.forEach(h=>{
+      const hos=arr(h.호), selHo = a.ho ? hos.filter(x=>parseInt(x.호번호)===a.ho) : hos;
+      if(h.항내용) lines.push(h.항내용);
+      selHo.forEach(x=>{ lines.push("  "+x.호내용); arr(x.목).forEach(m=>lines.push("    "+m.목내용)); });
+    });
+  }
+  return {name:info.법령명_한글||"", ef:ymd(unit.조문시행일자||info.시행일자), prom:ymd(info.공포일자),
+          text:lines.filter(Boolean).join("\n").trim(),
+          link:"https://www.law.go.kr/법령/"+encodeURIComponent((info.법령명_한글||"").replace(/\s/g,""))+"/제"+a.jo+"조"};
+}
+const ADMRUL_NAME="폐기물처리시설의 검사방법에 관한 규정";
+async function liveAdmrul(a){
+  const s=await lawGet({svc:"lawSearch.do", q:"target=admrul&display=20&query="+encodeURIComponent(ADMRUL_NAME)});
+  const hit=arr((s.AdmRulSearch||{}).admrul).find(x=>x.행정규칙명===ADMRUL_NAME);
+  if(!hit) throw new Error("행정규칙을 찾지 못했습니다");
+  const j=await lawGet({q:"target=admrul&ID="+hit.행정규칙일련번호});
+  const r=j.AdmRulService||{}, info=r.행정규칙기본정보||{};
+  const art=arr(r.조문내용).find(t=>new RegExp("^제"+a.jo+"조"+(a.gaji?"의"+a.gaji:"")+"\\(").test(t));
+  if(!art) throw new Error("해당 조문을 찾지 못했습니다");
+  return {name:info.행정규칙명||ADMRUL_NAME, ef:ymd(info.시행일자), prom:ymd(info.발령일자),
+          text:art.replace(/([^\s\d])(\d{1,2}\. )/g,"$1\n$2").trim(),
+          link:"https://www.law.go.kr/행정규칙/"+encodeURIComponent(ADMRUL_NAME.replace(/\s/g,""))};
+}
+async function showLive(L, box, btn){
+  if(!box) return;
+  if(box.dataset.on==="1"){ box.innerHTML=""; box.dataset.on=""; btn.textContent="현행 원문 조회"; return; }
+  box.dataset.on="1"; btn.textContent="원문 닫기";
+  if(!navigator.onLine){
+    box.innerHTML='<div class="note alert">인터넷에 연결되어 있지 않아 현행 원문을 불러올 수 없습니다. 위 수록본을 참고하십시오.</div>';
+    return;
+  }
+  box.innerHTML='<div class="livebox"><span class="spin"></span>국가법령정보센터에서 현행 원문을 불러오는 중입니다…</div>';
+  try{
+    const r = L.api.t==="admrul" ? await liveAdmrul(L.api) : await liveLaw(L.api);
+    const changed = L.dt && r.ef && r.ef > L.dt;
+    box.innerHTML='<div class="livebox"><h4>현행 원문 <span>'+esc(r.name)+'</span></h4>'
+      + '<div class="bd">'+esc(r.text)+'</div>'
+      + '<div class="ft"><span class="tag dt">시행 '+esc(r.ef)+'</span>'
+      + (r.prom?'<span class="tag">공포·발령 '+esc(r.prom)+'</span>':'')
+      + (changed?'<span class="tag chk2">수록본 이후 개정됨</span>':'')
+      + '<a href="'+r.link+'" target="_blank" rel="noopener">law.go.kr에서 열기</a></div>'
+      + '<div class="ft2">국가법령정보 공동활용 API로 방금 조회한 내용입니다. 위 수록본과 다르면 이 현행 원문이 우선합니다.</div></div>';
+  }catch(e){
+    box.innerHTML='<div class="note alert">현행 원문을 불러오지 못했습니다 — '+esc(e.message)+'. 위 수록본을 참고하시고 국가법령정보센터에서 원문을 확인하십시오.</div>';
+  }
 }
 function doAsk(){
   const q=$("q").value.trim();
@@ -1069,6 +1216,310 @@ async function runAI(){
 }
 
 /* ==========================================================
+   시트 — 법령 AI 챗봇 (시범)
+   법령 DB(data/laws.json)에서 관련 조문을 찾아 AI에 함께 보내고,
+   AI는 그 자료 번호 [n]을 근거로 달아 답한다. 키는 중계 서버에만 있다.
+   ========================================================== */
+const CHAT={db:null, idx:null, msgs:[], busy:false, err:""};
+const CHAT_K=8, CHAT_BUDGET=16000;
+const CHAT_SYS=`당신은 한국환경공단의 폐기물처리시설 검사업무를 돕는 법령 상담 챗봇이다.
+
+규칙:
+1. 이용자 메시지의 [자료]에 실린 법령 조문만 근거로 답한다. 자료에 없는 내용은 "제공된 법령 자료에서는 확인되지 않습니다"라고 말하고 추측하거나 지어내지 않는다.
+2. 근거가 되는 문장 끝에 자료 번호를 [1], [2]처럼 붙인다. [자료]에 없는 번호나 다른 출처를 만들지 않는다.
+3. 기간·기한·수치·대상 요건은 원문 표현을 그대로 옮긴다. 조문 번호는 자료에 적힌 대로 쓴다.
+4. 질문이 모호하면 어떤 경우인지 구분해서 답하거나 무엇이 더 필요한지 묻는다.
+5. 한국어로 간결하게 답한다. 필요하면 "- " 목록을 쓰되 표는 쓰지 않는다.
+6. 마지막 줄에 "최종 판단은 관할 행정청·검사기관에 확인하십시오."를 붙인다.`;
+const CHAT_SAMPLES=["소각시설 정기검사는 언제 받아야 하나요?","검사 신청은 언제까지, 어디에 하나요?","정기검사를 기술진단으로 대신할 수 있나요?","음식물류 폐기물 처리시설의 검사 대상 기준은?","검사를 안 받으면 어떤 처분을 받나요?"];
+
+/* ---- 법령 DB: 브라우저 저장본(하루) → 법령 API로 새로 구성 → 정적 파일(data/laws.json) 순으로 시도 ---- */
+const DB_VER=1, DB_TTL=24*3600*1000;
+const DB_LAWS=["001771","005353","008567"];           // 폐기물관리법 · 시행령 · 시행규칙 (법령ID)
+const DB_ADMRULS=["폐기물처리시설의 검사방법에 관한 규정"];
+function idbOpen(){ return new Promise((ok,no)=>{ const r=indexedDB.open("wf-lawdb",1);
+  r.onupgradeneeded=()=>r.result.createObjectStore("kv"); r.onsuccess=()=>ok(r.result); r.onerror=()=>no(r.error); }); }
+async function idbGet(k){ try{ const d=await idbOpen(); return await new Promise(ok=>{ const q=d.transaction("kv").objectStore("kv").get(k); q.onsuccess=()=>ok(q.result); q.onerror=()=>ok(null); }); }catch(e){ return null; } }
+async function idbSet(k,v){ try{ const d=await idbOpen(); await new Promise(ok=>{ const t=d.transaction("kv","readwrite"); t.objectStore("kv").put(v,k); t.oncomplete=ok; t.onerror=ok; }); }catch(e){} }
+const flat = v => v==null ? "" : typeof v==="string" ? v : Array.isArray(v) ? v.map(flat).filter(Boolean).join("\n") : String(v);
+function chunkLines(lines, size){ const out=[]; let buf=[], n=0;
+  lines.forEach(l=>{ if(buf.length&&n+l.length>size){ out.push(buf.join("\n")); buf=[]; n=0; } buf.push(l); n+=l.length+1; });
+  if(buf.length) out.push(buf.join("\n")); return out; }
+function lawArticleText(u){
+  const out=[flat(u.조문내용)];
+  arr(u.항).forEach(h=>{ if(h.항내용) out.push(flat(h.항내용));
+    arr(h.호).forEach(x=>{ out.push("  "+flat(x.호내용)); arr(x.목).forEach(m=>out.push("    "+flat(m.목내용))); }); });
+  return out.filter(s=>s&&s.trim()).join("\n").trim();
+}
+async function buildLawDbLive(progress){
+  const docs=[], sources=[];
+  for(const id of DB_LAWS){
+    progress("법령 받는 중 ("+(sources.length+1)+"/"+(DB_LAWS.length+DB_ADMRULS.length)+")…");
+    const law=(await lawGet({q:"target=law&ID="+id},false)).법령||{}, info=law.기본정보||{}, name=info.법령명_한글||"", ef=ymd(info.시행일자);
+    sources.push({kind:"법령",name,id,ef,prom:ymd(info.공포일자)});
+    arr((law.조문||{}).조문단위).forEach(u=>{
+      if(u.조문여부!=="조문") return;
+      const jo=+u.조문번호||0, gaji=+(u.조문가지번호||0), text=lawArticleText(u);
+      if(!text || /^\s*제\d+조(의\d+)?\s*삭제/.test(text)) return;
+      docs.push({t:"law",law:name,lid:id,kind:"조문",jo,gaji,cite:name+" 제"+jo+"조"+(gaji?"의"+gaji:""),
+                 title:flat(u.조문제목),ef:ymd(u.조문시행일자)||ef,text});
+    });
+    arr((law.별표||{}).별표단위).forEach(b=>{
+      if((flat(b.별표구분)||"별표")!=="별표") return;
+      const no=+b.별표번호||0, bg=+(b.별표가지번호||0), label="[별표 "+no+(bg?"의"+bg:"")+"]";
+      const parts=chunkLines(flat(b.별표내용).split("\n").map(s=>s.trimEnd()).filter(s=>s.trim()),1800);
+      parts.forEach((p,i)=>docs.push({t:"law-byul",law:name,lid:id,kind:"별표",byul:no,
+        cite:name+" "+label+(parts.length>1?" ("+(i+1)+"/"+parts.length+")":""),title:flat(b.별표제목),ef,text:p}));
+    });
+  }
+  for(const nm of DB_ADMRULS){
+    progress("행정규칙 받는 중 ("+(sources.length+1)+"/"+(DB_LAWS.length+DB_ADMRULS.length)+")…");
+    const s=await lawGet({svc:"lawSearch.do",q:"target=admrul&display=20&query="+encodeURIComponent(nm)},false);
+    const hit=arr((s.AdmRulSearch||{}).admrul).find(x=>x.행정규칙명===nm);
+    if(!hit) continue;
+    const r=(await lawGet({q:"target=admrul&ID="+hit.행정규칙일련번호},false)).AdmRulService||{}, info=r.행정규칙기본정보||{}, ef=ymd(info.시행일자);
+    sources.push({kind:"행정규칙",name:nm,id:info.행정규칙ID,ef,prom:ymd(info.발령일자)});
+    arr(r.조문내용).forEach(t=>{
+      t=flat(t).trim(); const m=t.match(/^제(\d+)조(?:의(\d+))?\(([^)]*)\)/); if(!m) return;
+      docs.push({t:"admrul",law:nm,kind:"조문",jo:+m[1],gaji:+(m[2]||0),cite:nm+" 제"+m[1]+"조"+(m[2]?"의"+m[2]:""),
+                 title:m[3],ef,text:t.replace(/([^\s\d])(\d{1,2}\. )/g,"$1\n$2")});
+    });
+    arr((r.별표||{}).별표단위).forEach(b=>{
+      const no=+b.별표번호||0, parts=chunkLines(flat(b.별표내용).split("\n").map(s=>s.trimEnd()).filter(s=>s.trim()),1800);
+      parts.forEach((p,i)=>docs.push({t:"admrul-byul",law:nm,kind:"별표",byul:no,
+        cite:nm+" [별표 "+no+"]"+(parts.length>1?" ("+(i+1)+"/"+parts.length+")":""),title:flat(b.별표제목),ef,text:p}));
+    });
+  }
+  if(!docs.length) throw new Error("받아온 조문이 없습니다");
+  const d=new Date(), p=n=>String(n).padStart(2,"0");
+  return {built:d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+" "+p(d.getHours())+":"+p(d.getMinutes()),
+          at:d.getTime(), ver:DB_VER, live:true, sources, docs};
+}
+function loadLawDb(force, progress=()=>{}){
+  if(CHAT.db && !force) return Promise.resolve(CHAT.db);
+  if(CHAT.loading) return CHAT.loading;                 // 동시에 여러 번 받지 않도록
+  CHAT.loading=loadLawDbInner(force, progress).finally(()=>{ CHAT.loading=null; });
+  return CHAT.loading;
+}
+async function loadLawDbInner(force, progress){
+  let db=null, liveErr="";
+  if(!force){ const c=await idbGet("db"); if(c && c.ver===DB_VER && Date.now()-c.at<DB_TTL) db=c; }
+  if(!db){
+    try{ db=await buildLawDbLive(progress); await idbSet("db",db); }
+    catch(e){ liveErr=e.message; }
+  }
+  if(!db){ const c=await idbGet("db"); if(c && c.ver===DB_VER) db=c; }           // 오래됐어도 저장본이 있으면 사용
+  if(!db){
+    const res=await fetch("data/laws.json",{cache:"no-cache"}).catch(()=>null);
+    if(res && res.ok) db=await res.json();
+  }
+  if(!db) throw new Error("법령 DB를 구성하지 못했습니다"+(liveErr?" — "+liveErr:""));
+  db.docs.forEach((d,i)=>d.i=i);
+  const df={}, docs=db.docs.map(d=>{
+    const tf={}, g=grams(d.cite+" "+d.title+" "+d.text);
+    g.forEach(t=>tf[t]=(tf[t]||0)+1);
+    Object.keys(tf).forEach(t=>df[t]=(df[t]||0)+1);
+    grams(d.cite+" "+d.title).forEach(t=>tf[t]=(tf[t]||0)+3);
+    return {tf,len:g.length};
+  });
+  CHAT.idx={df,docs,N:docs.length,avg:docs.reduce((a,b)=>a+b.len,0)/(docs.length||1)};
+  return (CHAT.db=db);
+}
+
+/* ---- AI 호출: 로컬·Worker는 중계, 그 외에는 이용자가 입력한 키로 OpenRouter 직접 호출 ---- */
+const orKey = ()=>{ try{ return localStorage.getItem(ORKEY)||""; }catch(e){ return ""; } };
+async function chatComplete(messages){
+  if(HAS_PROXY){
+    const res=await fetch(PROXY+"/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({max_tokens:1500,messages})});
+    const j=await res.json().catch(()=>({}));
+    if(!res.ok) throw Object.assign(new Error(j.error||("AI 응답 오류 "+res.status)),{status:res.status});
+    return j;
+  }
+  const key=orKey();
+  if(!key) throw Object.assign(new Error("AI 키가 설정되지 않았습니다. 위 ‘AI 키 설정’에서 OpenRouter 키를 입력하십시오."),{status:0});
+  let last=null;
+  for(const model of CHAT_MODELS){
+    for(let a=0;a<2;a++){
+      const res=await fetch("https://openrouter.ai/api/v1/chat/completions",{method:"POST",
+        headers:{"Content-Type":"application/json","Authorization":"Bearer "+key,"X-Title":"waste-inspection"},
+        body:JSON.stringify({model,messages,max_tokens:1500,temperature:0.2})});
+      const j=await res.json().catch(()=>({}));
+      const text=(((j.choices||[])[0]||{}).message||{}).content||"";
+      if(res.ok && !j.error && text.trim()) return {content:text,model:j.model||model};
+      const em=(j.error&&((j.error.metadata&&j.error.metadata.raw)||j.error.message))||("HTTP "+res.status);
+      last=Object.assign(new Error(em),{status:res.status});
+      if([401,402,403].includes(res.status)) throw last;
+      if(res.status===429||res.status>=500){ await new Promise(r=>setTimeout(r,2000+a*3000)); continue; }
+      break;
+    }
+  }
+  throw last||new Error("AI 응답 없음");
+}
+function chatSearch(query){
+  const I=CHAT.idx, D=CHAT.db.docs, qs=[...new Set(grams(query))], k1=1.4, b=0.7;
+  // "제41조", "시행규칙 별표 9"처럼 조문을 직접 지목하면 가산
+  const lawHint = /시행규칙|규칙/.test(query)?"시행규칙":/시행령/.test(query)?"시행령":/검사방법|고시|규정/.test(query)?"검사방법":"";
+  const joM=[...query.matchAll(/제?\s*(\d+)\s*조(?:의\s*(\d+))?/g)].map(m=>[+m[1],+(m[2]||0)]);
+  const byM=[...query.matchAll(/별표\s*(\d+)/g)].map(m=>+m[1]);
+  return I.docs.map((d,i)=>{
+    let s=0;
+    qs.forEach(t=>{
+      const fq=d.tf[t]; if(!fq) return;
+      const idf=Math.log(1+(I.N-(I.df[t]||0)+0.5)/((I.df[t]||0)+0.5));
+      s+=idf*(fq*(k1+1))/(fq+k1*(1-b+b*d.len/I.avg));
+    });
+    const doc=D[i], lawOk=!lawHint||doc.law.includes(lawHint);
+    if(joM.some(([j,g])=>doc.jo===j&&(doc.gaji||0)===g)) s+= lawOk?25:8;
+    if(byM.includes(doc.byul)) s+= lawOk?20:6;
+    return {i,s};
+  }).filter(x=>x.s>0).sort((a,b)=>b.s-a.s);
+}
+function pickSources(query){
+  const out=[]; let used=0;
+  for(const h of chatSearch(query)){
+    const d=CHAT.db.docs[h.i], n=d.text.length+d.cite.length+40;
+    if(used+n>CHAT_BUDGET && out.length) continue;
+    out.push(d); used+=n;
+    if(out.length>=CHAT_K) break;
+  }
+  return out;
+}
+const lawLink = d => d.t.startsWith("admrul")
+  ? "https://www.law.go.kr/행정규칙/"+encodeURIComponent(d.law.replace(/\s/g,""))
+  : "https://www.law.go.kr/법령/"+encodeURIComponent(d.law.replace(/\s/g,""))
+    + (d.kind==="조문" ? "/제"+d.jo+"조"+(d.gaji?"의"+d.gaji:"") : "");
+const liveSpec = d => d.t==="law" ? {t:"law",id:d.lid,jo:d.jo,gaji:d.gaji}
+  : d.t==="admrul" ? {t:"admrul",jo:d.jo,gaji:d.gaji} : null;
+
+function renderChatAnswer(text, n){
+  let h=esc(text).replace(/\*\*([^*\n]+)\*\*/g,"<b>$1</b>");
+  return h.replace(/[\[【](\d+(?:\s*[,，]\s*\d+)*)[\]】]/g,(m,g)=>g.split(/\s*[,，]\s*/).map(x=>{
+    const k=+x; return k>=1&&k<=n ? '<button class="cite" data-n="'+k+'">'+k+'</button>'
+                                  : '<button class="cite bad" title="자료에 없는 번호">'+k+'</button>';
+  }).join(""));
+}
+function srcCard(d, k, hit){
+  return '<details class="'+(hit?"hit":"")+'" data-k="'+k+'"><summary><span class="n">'+k+'</span>'
+    + '<span class="c">'+esc(d.cite)+'</span>'+(d.title?'<span class="t">'+esc(d.title)+'</span>':'')+'</summary>'
+    + '<div class="sb"><pre>'+esc(d.text)+'</pre><div class="row">'
+    + '<span class="tag dt">DB 시행 '+esc(d.ef||"")+'</span>'
+    + (liveSpec(d)?'<button class="live" data-k="'+k+'">현행 원문 조회</button>':'')
+    + '<a href="'+lawLink(d)+'" target="_blank" rel="noopener" style="margin-left:auto;font-size:12.5px;color:var(--accent)">law.go.kr에서 열기</a>'
+    + '</div><div class="liveout"></div></div></details>';
+}
+function renderChatLog(){
+  const log=$("chatlog"); if(!log) return;
+  log.innerHTML = CHAT.msgs.map((m,mi)=>{
+    if(m.role==="user") return '<div class="msg u">'+esc(m.content)+'</div>';
+    if(m.error) return '<div class="msg a bad"><div class="bd">'+esc(m.error)+'</div>'
+      + '<div class="meta"><button class="cpy" data-retry="'+mi+'" style="margin:0;color:var(--ember)">다시 시도</button></div></div>';
+    const cited=new Set([...m.content.matchAll(/[\[【](\d+(?:\s*[,，]\s*\d+)*)[\]】]/g)].flatMap(x=>x[1].split(/\s*[,，]\s*/).map(Number)));
+    const hits=m.srcs.map((d,i)=>[d,i+1]).filter(([,k])=>cited.has(k)), rest=m.srcs.map((d,i)=>[d,i+1]).filter(([,k])=>!cited.has(k));
+    return '<div class="msg a" data-mi="'+mi+'"><div class="bd">'+renderChatAnswer(m.content, m.srcs.length)+'</div>'
+      + '<div class="srcs"><div class="h">근거 자료 '+hits.length+'건</div>'
+      + hits.map(([d,k])=>srcCard(d,k,true)).join("")
+      + (rest.length?'<button class="more">함께 검토한 자료 '+rest.length+'건 보기</button><div class="rest" style="display:none">'
+         + rest.map(([d,k])=>srcCard(d,k,false)).join("")+'</div>':'')
+      + '</div><div class="meta">'+esc(m.model||"")+'</div></div>';
+  }).join("")
+  + (CHAT.busy?'<div class="msg a"><div class="bd"><span class="spin"></span>관련 조문을 찾아 답변을 만드는 중입니다… 무료 모델은 수십 초 걸릴 수 있습니다.</div></div>':'');
+  log.querySelectorAll(".msg.a[data-mi]").forEach(box=>{
+    const m=CHAT.msgs[+box.dataset.mi];
+    box.querySelectorAll(".cite[data-n]").forEach(c=>c.onclick=()=>{
+      const card=box.querySelector('details[data-k="'+c.dataset.n+'"]'); if(!card) return;
+      const rest=card.closest(".rest"); if(rest) rest.style.display="block";
+      card.open=true; card.scrollIntoView({behavior:"smooth",block:"center"});
+      card.classList.add("flash"); setTimeout(()=>card.classList.remove("flash"),1400);
+    });
+    const more=box.querySelector(".more");
+    if(more) more.onclick=()=>{ const r=box.querySelector(".rest"); const on=r.style.display==="none"; r.style.display=on?"block":"none"; more.textContent=(on?"접기":"함께 검토한 자료 "+r.children.length+"건 보기"); };
+    box.querySelectorAll(".live").forEach(b=>b.onclick=e=>{
+      e.preventDefault(); const d=m.srcs[+b.dataset.k-1];
+      showLive({api:liveSpec(d), dt:d.ef}, b.closest(".sb").querySelector(".liveout"), b);
+    });
+  });
+  log.querySelectorAll("[data-retry]").forEach(b=>b.onclick=()=>{
+    const mi=+b.dataset.retry, q=CHAT.msgs[mi-1].content;
+    CHAT.msgs.splice(mi-1,2); sendChat(q);
+  });
+}
+function openChat(){
+  const p=$("p-chat");
+  if(!p.dataset.ready){
+    p.dataset.ready="1";
+    p.innerHTML='<div class="card"><h2>법령 AI 챗봇 <span class="tag chk2" style="vertical-align:3px">시범</span></h2>'
+      + '<p class="lede">폐기물관리법·시행령·시행규칙과 「폐기물처리시설의 검사방법에 관한 규정」 전체 조문에서 관련 근거를 찾아 AI가 답합니다. 답변의 <b>[번호]</b>를 누르면 근거 조문이 열리고, 국가법령정보센터에서 현행 원문을 바로 조회할 수 있습니다.</p>'
+      + '<div class="note warn" style="margin-top:0"><b>무료 AI 모델(Gemma)을 사용합니다.</b> 질문이 외부 AI 서비스로 전송되므로 사업장명·개인정보 등 민감한 내용은 입력하지 마십시오. AI 답변은 틀릴 수 있으니 반드시 근거 조문을 확인하십시오.</div>'
+      + (HAS_PROXY?'':'<details class="faq" id="orbox" style="margin-top:10px"><summary>AI 키 설정 <span class="src" id="orstate"></span></summary><div class="ans">'
+        + '<p style="font-size:13px;margin:0 0 8px">OpenRouter 키(sk-or-…)를 입력하면 <b>이 브라우저에만</b> 저장되고, 질문할 때 OpenRouter로 직접 전송됩니다. 다른 사람과 같이 쓰는 PC에서는 사용 후 삭제하십시오.</p>'
+        + '<div class="qrow"><input id="orkey" type="password" placeholder="sk-or-v1-..." autocomplete="off"><button class="btn" id="orsave">저장</button><button class="btn ghost sm" id="ordel">삭제</button></div>'
+        + '</div></details>')
+      + '<div id="chatstat" class="chatbar" style="margin-top:10px"></div>'
+      + '<div class="chips" id="chatchips"></div></div>'
+      + '<div class="chatlog" id="chatlog"></div>'
+      + '<div class="chatin"><div class="qrow"><textarea id="chatq" rows="1" placeholder="법령에 대해 질문하세요. (Enter 전송, Shift+Enter 줄바꿈)"></textarea>'
+      + '<button class="btn" id="chatgo">보내기</button></div>'
+      + '<div class="chatbar"><button id="chatclr">대화 지우기</button><span id="chatnote"></span></div></div>';
+    $("chatchips").innerHTML=CHAT_SAMPLES.map(s=>'<button class="chip">'+esc(s)+'</button>').join("");
+    $("chatchips").querySelectorAll(".chip").forEach(c=>c.onclick=()=>sendChat(c.textContent));
+    const ta=$("chatq");
+    ta.addEventListener("input",()=>{ ta.style.height="auto"; ta.style.height=Math.min(ta.scrollHeight,160)+"px"; });
+    ta.addEventListener("keydown",e=>{ if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){ e.preventDefault(); $("chatgo").click(); } });
+    $("chatgo").onclick=()=>{ const q=ta.value.trim(); if(q){ ta.value=""; ta.style.height="auto"; sendChat(q); } };
+    $("chatclr").onclick=()=>{ if(CHAT.busy) return; CHAT.msgs=[]; renderChatLog(); };
+    if(!HAS_PROXY){
+      const upd=()=>{ const k=orKey(); $("orstate").textContent=k?"저장됨":"미설정"; if(!k) $("orbox").open=true; };
+      $("orsave").onclick=()=>{ const v=$("orkey").value.trim(); if(!v) return; try{ localStorage.setItem(ORKEY,v); }catch(e){} $("orkey").value=""; upd(); $("orbox").open=false; };
+      $("ordel").onclick=()=>{ try{ localStorage.removeItem(ORKEY); }catch(e){} upd(); };
+      upd();
+    }
+    refreshDb(false);
+  }
+  renderChatLog();
+}
+function refreshDb(force){
+  const st=$("chatstat");
+  $("chatgo").disabled=true;
+  st.innerHTML='<span class="spin"></span>법령 DB 준비 중…';
+  loadLawDb(force, msg=>{ st.innerHTML='<span class="spin"></span>'+esc(msg); }).then(db=>{
+    st.innerHTML='법령 DB '+esc(db.built)+(db.live?' 국가법령정보센터에서 구성':' 저장본')+' · '+db.docs.length.toLocaleString()+'건 · '
+      + db.sources.map(s=>esc(s.name)+' <span class="tag dt">시행 '+esc(s.ef)+'</span>').join(" ")
+      + ' <button id="dbre">새로 받기</button>';
+    $("dbre").onclick=()=>refreshDb(true);
+    $("chatgo").disabled=false;
+  }).catch(e=>{
+    st.innerHTML='<span style="color:var(--ember)">'+esc(e.message)+'</span> <button id="dbre">다시 시도</button>';
+    $("dbre").onclick=()=>refreshDb(true);
+  });
+}
+async function sendChat(q){
+  if(CHAT.busy) return;
+  try{ await loadLawDb(); }catch(e){ return; }
+  const prevQ=[...CHAT.msgs].reverse().find(m=>m.role==="user");
+  const srcs=pickSources(q+" "+expand(q)+(prevQ&&q.length<30?" "+prevQ.content:""));
+  CHAT.msgs.push({role:"user",content:q});
+  CHAT.busy=true; renderChatLog(); $("chatgo").disabled=true;
+  window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+  const history=CHAT.msgs.slice(0,-1).filter(m=>!m.error).slice(-6)
+    .map(m=>({role:m.role, content:m.role==="assistant"?m.content.replace(/\s*[\[【]\d+(?:\s*[,，]\s*\d+)*[\]】]/g,""):m.content}));
+  const ctx=srcs.map((d,i)=>"["+(i+1)+"] "+d.cite+(d.title?" ("+d.title+")":"")+" — 시행 "+d.ef+"\n"+d.text).join("\n\n");
+  const user="[자료]\n"+(ctx||"(관련 조문을 찾지 못했습니다)")+"\n\n[이용자가 선택한 시설] "+f().name+"\n\n[질문] "+q;
+  const t0=Date.now();
+  let msg;
+  try{
+    const j=await chatComplete([{role:"system",content:CHAT_SYS}].concat(history,[{role:"user",content:user}]));
+    msg={role:"assistant",content:j.content.trim(),srcs,model:(j.model||"")+" · "+((Date.now()-t0)/1000).toFixed(1)+"초"};
+  }catch(e){
+    const pre = e.status===429 ? "무료 AI 모델 이용이 몰려 있거나 하루 한도(50회)를 넘었습니다. 잠시 후 다시 시도하십시오. — "
+              : e.status===401 ? "AI 키가 올바르지 않습니다. — " : "";
+    msg={role:"assistant",error:e instanceof TypeError?"AI 서버에 연결하지 못했습니다.":pre+e.message,content:"",srcs:[]};
+  }
+  CHAT.msgs.push(msg); CHAT.busy=false; $("chatgo").disabled=false;
+  renderChatLog();
+  const last=$("chatlog").lastElementChild; if(last) last.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ==========================================================
    전체
    ========================================================== */
 function renderAll(){
@@ -1085,6 +1536,7 @@ $("nav").querySelectorAll("button").forEach(b=>{
     document.querySelectorAll("section.pane").forEach(s=>s.classList.remove("on"));
     $("p-"+b.dataset.p).classList.add("on");
     if(b.dataset.p==="rev") renderRev();
+    if(b.dataset.p==="chat") openChat();
     window.scrollTo({top:0,behavior:"smooth"});
   };
 });
